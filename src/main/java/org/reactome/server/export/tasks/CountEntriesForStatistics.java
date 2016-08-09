@@ -9,7 +9,6 @@ import java.nio.file.Path;
 
 /**
  * @author Florian Korninger <florian.korninger@ebi.ac.uk>
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
  */
 @SuppressWarnings("unused")
 @DataExport
@@ -20,7 +19,7 @@ public class CountEntriesForStatistics extends DataExportAbstract {
 
     @Override
     public String getQuery() {
-        return "Match (n:Pathway) RETURN \"pathway\" AS Type, count(n) as Count\n" +
+        return " MATCH (n:Pathway) RETURN \"pathway\" AS Type, count(n) as Count\n" +
                 "UNION MATCH (n:ReactionLikeEvent) RETURN \"reaction\" AS Type, count(n) as Count\n" +
                 "UNION MATCH (n:Complex) RETURN \"complex\" AS Type, count(n) as Count\n" +
                 "UNION MATCH (n:EntitySet) RETURN \"set\" AS Type, count(n) as Count\n" +
