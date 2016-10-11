@@ -1,9 +1,9 @@
 package org.reactome.server.export;
 
 import com.martiansoftware.jsap.*;
-import org.reactome.server.export.common.DataExport;
-import org.reactome.server.export.common.DataExportAbstract;
 import org.reactome.server.export.config.GraphQANeo4jConfig;
+import org.reactome.server.export.mapping.Mapping;
+import org.reactome.server.export.tasks.common.DataExport;
 import org.reactome.server.graph.service.GeneralService;
 import org.reactome.server.graph.utils.ReactomeGraphCore;
 import org.reflections.Reflections;
@@ -24,12 +24,13 @@ public class Main {
 
         SimpleJSAP jsap = new SimpleJSAP(Main.class.getName(), "A tool for creating the files for the download section from the existing graph database",
                 new Parameter[]{
-                        new FlaggedOption(  "host",     JSAP.STRING_PARSER, "localhost",     JSAP.REQUIRED,     'h', "host",     "The neo4j host"),
-                        new FlaggedOption(  "port",     JSAP.STRING_PARSER, "7474",          JSAP.NOT_REQUIRED, 'b', "port",     "The neo4j port"),
-                        new FlaggedOption(  "user",     JSAP.STRING_PARSER, "neo4j",         JSAP.REQUIRED,     'u', "user",     "The neo4j user"),
-                        new FlaggedOption(  "password", JSAP.STRING_PARSER, "neo4j",         JSAP.REQUIRED,     'p', "password", "The neo4j password"),
-                        new FlaggedOption(  "output",   JSAP.STRING_PARSER, "./export/",     JSAP.REQUIRED,     'o', "output",   "Output folder"),
-                        new QualifiedSwitch("verbose",  JSAP.BOOLEAN_PARSER, JSAP.NO_DEFAULT,JSAP.NOT_REQUIRED, 'v', "verbose",  "Requests verbose output")
+                        new FlaggedOption(  "host",     JSAP.STRING_PARSER,  "localhost",     JSAP.REQUIRED,     'h', "host",     "The neo4j host"          ),
+                        new FlaggedOption(  "port",     JSAP.STRING_PARSER,  "7474",          JSAP.NOT_REQUIRED, 'b', "port",     "The neo4j port"          ),
+                        new FlaggedOption(  "user",     JSAP.STRING_PARSER,  "neo4j",         JSAP.REQUIRED,     'u', "user",     "The neo4j user"          ),
+                        new FlaggedOption(  "password", JSAP.STRING_PARSER,  "neo4j",         JSAP.REQUIRED,     'p', "password", "The neo4j password"      ),
+                        new FlaggedOption(  "output",   JSAP.STRING_PARSER,  "/tmp/export/",  JSAP.REQUIRED,     'o', "output",   "Output folder"           ),
+                        new FlaggedOption(  "task",     JSAP.STRING_PARSER,  null,            JSAP.NOT_REQUIRED, 't', "task",     "A specific task"         ),
+                        new QualifiedSwitch("verbose",  JSAP.BOOLEAN_PARSER, JSAP.NO_DEFAULT, JSAP.NOT_REQUIRED, 'v', "verbose",  "Requests verbose output" )
                 }
         );
         JSAPResult config = jsap.parse(args);
@@ -40,22 +41,43 @@ public class Main {
 
         GeneralService genericService = ReactomeGraphCore.getService(GeneralService.class);
 
+        String task = config.getString("task");
         Reflections reflections = new Reflections("org.reactome.server.export.tasks");
         Set<Class<?>> tests = reflections.getTypesAnnotatedWith(org.reactome.server.export.annotations.DataExport.class);
 
-        DataExportAbstract.setPath(config.getString("output"));
+        String path = config.getString("output");
+        if(!path.endsWith("/")) path += "/";
+
         boolean verbose = config.getBoolean("verbose");
+
+        /*############ IMPORTANT ############
+        The export is divided in two sections:
+            1) Generic Mapping Files -> A set of files per resource identifier pointing to different levels of Events
+            2) On demand exports -> Based on users *interensting* requests, different files are generated
+        ###################################*/
+
+        //Only run the mapping if a specific task has not been specified
+        if(task == null) Mapping.run(genericService, path, verbose);
+
         int n = tests.size(), i = 1, count = 0;
         for (Class test : tests) {
             try {
                 Object object = test.newInstance();
                 DataExport qATest = (DataExport) object;
-                if(verbose) System.out.print("\rRunning task " + (i++) + " of " + n);
-                if(qATest.run(genericService)) count++;
+                if (task == null || qATest.getName().equals(task)) {
+                    if (verbose) {
+                        if (task == null) System.out.print("\rRunning task " + qATest.getName() + " [" + (i++) + " of " + n + "]");
+                        else System.out.println("Running task " + qATest.getName());
+                    }
+                    if (qATest.run(genericService, path)) count++;
+                }
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
-        if(verbose) System.out.println("\r" + count + " files has been generated.\nPlease ensure the files are available for download.");
+        if (verbose) {
+            if (task == null) System.out.println("\rTasks finished. " + count + " files has been generated.\n\nPlease ensure the files are available for download.");
+            else System.out.println("Task inished.");
+        }
     }
 }
