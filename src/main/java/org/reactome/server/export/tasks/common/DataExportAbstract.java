@@ -50,8 +50,12 @@ public abstract class DataExportAbstract implements DataExport {
     public abstract void printResult(Result result, Path path) throws IOException;
 
     protected final void print(Result result, Path path, String... attributes) throws IOException {
+        print(result, path, true, attributes);
+    }
+
+    protected final void print(Result result, Path path, boolean header, String... attributes) throws IOException {
         List<String> lines = new ArrayList<>();
-        lines.add(StringUtils.join(attributes, "\t"));
+        if(header) lines.add(StringUtils.join(attributes, "\t"));
         for (Map<String, Object> map : result) {
             List<String> line = new ArrayList<>();
             for (String attribute : attributes) {
