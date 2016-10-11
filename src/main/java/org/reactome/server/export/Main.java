@@ -28,7 +28,7 @@ public class Main {
                         new FlaggedOption(  "port",     JSAP.STRING_PARSER,  "7474",          JSAP.NOT_REQUIRED, 'b', "port",     "The neo4j port"          ),
                         new FlaggedOption(  "user",     JSAP.STRING_PARSER,  "neo4j",         JSAP.REQUIRED,     'u', "user",     "The neo4j user"          ),
                         new FlaggedOption(  "password", JSAP.STRING_PARSER,  "neo4j",         JSAP.REQUIRED,     'p', "password", "The neo4j password"      ),
-                        new FlaggedOption(  "output",   JSAP.STRING_PARSER,  "/tmp/export/",  JSAP.REQUIRED,     'o', "output",   "Output folder"           ),
+                        new FlaggedOption(  "output",   JSAP.STRING_PARSER,  null,            JSAP.REQUIRED,     'o', "output",   "Output folder"           ),
                         new FlaggedOption(  "task",     JSAP.STRING_PARSER,  null,            JSAP.NOT_REQUIRED, 't', "task",     "A specific task"         ),
                         new QualifiedSwitch("verbose",  JSAP.BOOLEAN_PARSER, JSAP.NO_DEFAULT, JSAP.NOT_REQUIRED, 'v', "verbose",  "Requests verbose output" )
                 }
@@ -77,7 +77,7 @@ public class Main {
         }
         if (verbose) {
             if (task == null) System.out.println("\rTasks finished. " + count + " files has been generated.\n\nPlease ensure the files are available for download.");
-            else System.out.println("Task inished.");
+            else System.out.println("Task finished.");
         }
     }
 }
