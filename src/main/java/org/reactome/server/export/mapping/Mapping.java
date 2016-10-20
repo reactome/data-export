@@ -86,12 +86,12 @@ public class Mapping {
                 if (attribute.equals("Identifier")) {
                     String id = (String) map.get("variant" + attribute);
                     line.add(id != null ? id : (String) map.get(attribute));
-                } else if (attribute.equals("Evidence_Code")) {
-                    line.add(((Boolean) map.get(attribute)) ? "IEA" : "TAS");
                 } else if (attribute.equals("Link")) {
                     String link = (String) map.get("Pathway_ID");
                     link = link != null ? link : (String) map.get("Reaction_ID");
                     line.add("http://reactome.org/PathwayBrowser/#/" + link);
+                } else if (attribute.equals("Evidence_Code")) {
+                    line.add(((Boolean) map.get(attribute)) ? "IEA" : "TAS");
                 } else {
                     Object aux = map.get(attribute);
                     line.add(aux == null ? "-" : "" + aux);
