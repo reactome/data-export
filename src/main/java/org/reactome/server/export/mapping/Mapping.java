@@ -79,7 +79,7 @@ public class Mapping {
     private static void printMapping(Result result, Path path, List<String> attributes) throws IOException {
         List<String> lines = new ArrayList<>();
         attributes = new ArrayList<>(attributes);
-        attributes.add(1, "Link");
+        attributes.add(2, "Link");
         for (Map<String, Object> map : result) {
             List<String> line = new ArrayList<>();
             for (String attribute : attributes) {
@@ -94,7 +94,11 @@ public class Mapping {
                     line.add(((Boolean) map.get(attribute)) ? "IEA" : "TAS");
                 } else {
                     Object aux = map.get(attribute);
-                    line.add(aux == null ? "-" : "" + aux);
+                    // Some results might be list of elements. In this case we use UNWIND and the output looks like
+                    // ["a", "b", "c", ] and we want it to look like ["a", "b", "c"].
+                    //               ^ we remove this comma and the space after it
+                    // That's why we replace ", ]" by "]"
+                    line.add(aux == null ? "-" : ("" + aux).replaceAll(", ]$", "]"));
                 }
             }
             lines.add(StringUtils.join(line, "\t"));
