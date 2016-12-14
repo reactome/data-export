@@ -63,13 +63,13 @@ public class Main {
         for (Class test : tests) {
             try {
                 Object object = test.newInstance();
-                DataExport qATest = (DataExport) object;
-                if (task == null || qATest.getName().equals(task)) {
+                DataExport dataExport = (DataExport) object;
+                if (task == null || dataExport.getName().equals(task)) {
                     if (verbose) {
-                        if (task == null) System.out.print("\rRunning task " + qATest.getName() + " [" + (i++) + " of " + n + "]");
-                        else System.out.println("Running task " + qATest.getName());
+                        if (task == null) System.out.print("\rRunning task " + dataExport.getName() + " [" + (i++) + " of " + n + "]");
+                        else System.out.println("Running task " + dataExport.getName());
                     }
-                    if (qATest.run(genericService, path)) count++;
+                    if (dataExport.run(genericService, path)) count++;
                 }
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
