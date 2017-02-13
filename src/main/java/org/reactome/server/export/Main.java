@@ -1,7 +1,7 @@
 package org.reactome.server.export;
 
 import com.martiansoftware.jsap.*;
-import org.reactome.server.export.config.GraphQANeo4jConfig;
+import org.reactome.server.export.config.ReactomeNeo4jConfig;
 import org.reactome.server.export.mapping.Mapping;
 import org.reactome.server.export.tasks.common.DataExport;
 import org.reactome.server.graph.service.GeneralService;
@@ -37,7 +37,7 @@ public class Main {
         if (jsap.messagePrinted()) System.exit(1);
 
         //Initialising ReactomeCore Neo4j configuration
-        ReactomeGraphCore.initialise(config.getString("host"), config.getString("port"), config.getString("user"), config.getString("password"), GraphQANeo4jConfig.class);
+        ReactomeGraphCore.initialise(config.getString("host"), config.getString("port"), config.getString("user"), config.getString("password"), ReactomeNeo4jConfig.class);
 
         GeneralService genericService = ReactomeGraphCore.getService(GeneralService.class);
 
