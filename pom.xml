@@ -4,14 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.reactome.server.qa</groupId>
-    <artifactId>qa-module</artifactId>
-
+    <artifactId>data-export</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0-SNAPSHOT</version>
-    <name>qa-module</name>
+    <name>Data Export</name>
 
-    <description>The QA tests are meant to check the integrity of the data imported into the graph database
-    </description>
+    <description>Exports specific content in several files</description>
+
     <organization>
         <name>The European Bioinformatics Institute</name>
         <url>http://www.ebi.ac.uk/</url>
