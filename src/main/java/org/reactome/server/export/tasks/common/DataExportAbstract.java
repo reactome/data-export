@@ -59,7 +59,19 @@ public abstract class DataExportAbstract implements DataExport {
         for (Map<String, Object> map : result) {
             List<String> line = new ArrayList<>();
             for (String attribute : attributes) {
-                line.add("" + map.get(attribute));
+                // Some results might be list of elements. In some cases we use REDUCE and the output looks like
+                // ["a", "b", "c", ] and we want it to look like ["a", "b", "c"].
+                //               ^ we remove this comma and the space after it
+                // That's why we replace ", ]" by "]"
+                Object aux = map.get(attribute);
+                if(aux instanceof Object[]){
+                    StringBuilder rtn = new StringBuilder("[");
+                    for (Object item : (Object[]) aux) {
+                        rtn.append(item).append(", ");
+                    }
+                    aux = rtn.append("]").toString();
+                }
+                line.add("\"" + (aux == null ? null : ("" + aux).replaceAll(", ]$", "]")) + "\"");
             }
             lines.add(StringUtils.join(line, "\t"));
         }
