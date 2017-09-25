@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -36,42 +37,96 @@ public class Mapping {
         }
     }
 
+    private enum ExportType {
+        LOWER_LEVEL_PATHWAY("LLP"),
+        ALL_PATHWAYS("all pathways"),
+        REACTIONS("reactions");
+
+        private String name;
+
+        ExportType(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    private enum ExportPhysicalEntity {
+        INCLUDE(true), EXCLUDE(false);
+
+        private boolean toPE;
+
+        ExportPhysicalEntity(boolean toPE) {
+            this.toPE = toPE;
+        }
+    }
+
     @SuppressWarnings("unchecked")
-    public static void run(GeneralService genericService, String path, boolean verbose) {
-        int size = Resources.values().length * 3;
-        int current = 0; int count = 0;
+    public static void run(GeneralService generalService, String path, boolean verbose) {
+        int size = Resources.values().length * 6;
+        int current = 0; int count = 0; Long time = 0L;
         for (Resources resource : Resources.values()) {
-            for (String type : Arrays.asList("LLP", "all pathways", "reactions")) {
-                Result result = null;
-                List<String> attr = null;
-                String fileName = resource.name + "2Reactome";
-                if(verbose) System.out.print("\rRunning " + resource.name + " mapping for " + type + " [" + ++current + " of " + size + "]");
-                switch (type) {
-                    case "LLP":
-                        result = genericService.query(MappingQueries.queryResourceToLLP(resource.query), Collections.EMPTY_MAP);
-                        attr = Arrays.asList("Identifier", "Pathway_ID", "Pathway_Name", "Evidence_Code", "Species");
-                        break;
-                    case "all pathways":
-                        result = genericService.query(MappingQueries.queryResourceToAllPathways(resource.query), Collections.EMPTY_MAP);
-                        attr = Arrays.asList("Identifier", "Pathway_ID", "Pathway_Name", "Evidence_Code", "Species");
-                        fileName += "_All_Levels";
-                        break;
-                    case "reactions":
-                        result = genericService.query(MappingQueries.queryResourceToReactions(resource.query), Collections.EMPTY_MAP);
-                        attr = Arrays.asList("Identifier", "Reaction_ID", "Reaction_Name", "Evidence_Code", "Species");
-                        fileName += "Reactions";
-                        break;
-                }
-                if (result != null && result.iterator().hasNext()) {
-                    try {
-                        Path p = createFile(path, fileName);
-                        printMapping(result, p, attr);
-                        count++;
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            for (ExportPhysicalEntity exportPhysicalEntity : ExportPhysicalEntity.values()) {
+                for (ExportType type : ExportType.values()) {
+                    Result result = null;
+                    List<String> attr = null;
+                    String fileName = resource.name + "2Reactome";
+                    Long start = System.currentTimeMillis();
+                    if (verbose) {
+                        if (time > 0) System.out.println(" (" + getTimeFormatted(time) + ")");
+                        System.out.print("\rRunning " + resource.name + " mapping for " + type + (exportPhysicalEntity.toPE ? " including PEs" : "") + " [" + ++current + " of " + size + "]");
                     }
+                    switch (type) {
+                        case LOWER_LEVEL_PATHWAY:
+                            if (exportPhysicalEntity.toPE) {
+                                result = generalService.query(MappingQueries.queryResourceToPEAndLLP(resource.query), Collections.EMPTY_MAP);
+                                attr = Arrays.asList("Identifier", "Entity_ID", "Entity_Name", "Pathway_ID", "Pathway_Name", "Evidence_Code", "Species");
+                                fileName += "_PE_Pathway";
+                            } else {
+                                result = generalService.query(MappingQueries.queryResourceToLLP(resource.query), Collections.EMPTY_MAP);
+                                attr = Arrays.asList("Identifier", "Pathway_ID", "Pathway_Name", "Evidence_Code", "Species");
+                            }
+                            break;
+                        case ALL_PATHWAYS:
+                            if (exportPhysicalEntity.toPE) {
+                                result = generalService.query(MappingQueries.queryResourceToPEAndAllPathways(resource.query), Collections.EMPTY_MAP);
+                                attr = Arrays.asList("Identifier", "Entity_ID", "Entity_Name", "Pathway_ID", "Pathway_Name", "Evidence_Code", "Species");
+                                fileName += "_PE_All_Levels";
+                            } else {
+                                result = generalService.query(MappingQueries.queryResourceToAllPathways(resource.query), Collections.EMPTY_MAP);
+                                attr = Arrays.asList("Identifier", "Pathway_ID", "Pathway_Name", "Evidence_Code", "Species");
+                                fileName += "_All_Levels";
+                            }
+                            break;
+                        case REACTIONS:
+                            if (exportPhysicalEntity.toPE) {
+                                result = generalService.query(MappingQueries.queryResourceToPEAndReactions(resource.query), Collections.EMPTY_MAP);
+                                attr = Arrays.asList("Identifier", "Entity_ID", "Entity_Name", "Reaction_ID", "Reaction_Name", "Evidence_Code", "Species");
+                                fileName += "_PE_Reactions";
+                            } else {
+                                result = generalService.query(MappingQueries.queryResourceToReactions(resource.query), Collections.EMPTY_MAP);
+                                attr = Arrays.asList("Identifier", "Reaction_ID", "Reaction_Name", "Evidence_Code", "Species");
+                                fileName += "Reactions";
+                            }
+                            break;
+                    }
+                    if (result != null && result.iterator().hasNext()) {
+                        try {
+                            Path p = createFile(path, fileName);
+                            printMapping(result, p, attr);
+                            count++;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    time = System.currentTimeMillis() - start;
                 }
             }
+            //Only one cleaning after each resource
+            generalService.clearCache();
         }
         if(verbose) System.out.println("\rMapping finished. " + count + " files has been generated.");
     }
@@ -112,5 +167,11 @@ public class Mapping {
         if(!Files.isSymbolicLink(p.getParent())) Files.createDirectories(p.getParent());
         Files.createFile(p);
         return p;
+    }
+
+    private static String getTimeFormatted(Long millis){
+        return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
+                TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
     }
 }
