@@ -39,7 +39,7 @@ public class Main {
         //Initialising ReactomeCore Neo4j configuration
         ReactomeGraphCore.initialise(config.getString("host"), config.getString("port"), config.getString("user"), config.getString("password"), ReactomeNeo4jConfig.class);
 
-        GeneralService genericService = ReactomeGraphCore.getService(GeneralService.class);
+        GeneralService generalService = ReactomeGraphCore.getService(GeneralService.class);
 
         String task = config.getString("task");
         Reflections reflections = new Reflections("org.reactome.server.export.tasks");
@@ -57,7 +57,7 @@ public class Main {
         ###################################*/
 
         //Only run the mapping if a specific task has not been specified
-        if(task == null) Mapping.run(genericService, path, verbose);
+        if(task == null) Mapping.run(generalService, path, verbose);
 
         int n = tests.size(), i = 1, count = 0;
         for (Class test : tests) {
@@ -69,7 +69,7 @@ public class Main {
                         if (task == null) System.out.print("\rRunning task " + dataExport.getName() + " [" + (i++) + " of " + n + "]");
                         else System.out.println("Running task " + dataExport.getName());
                     }
-                    if (dataExport.run(genericService, path)) count++;
+                    if (dataExport.run(generalService, path)) count++;
                 }
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
