@@ -2,6 +2,7 @@ package org.reactome.server.export.opentargets.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.reactome.server.export.opentargets.query.ReactomeEvidence;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -15,9 +16,9 @@ public class EvidenceDisease {
     //Converted to a single string for version 1.2.5 (04/04/2017)
     private String name;
 
-    public EvidenceDisease(String diseaseIdentifier, String diseaseName) {
-        identifier = diseaseIdentifier;
-        name = diseaseName;
+    public EvidenceDisease(ReactomeEvidence reactomeEvidence) {
+        identifier = reactomeEvidence.getDiseaseIdentifier();
+        name = reactomeEvidence.getDisease();
     }
 
     @JsonProperty(value = "id", required = true)
