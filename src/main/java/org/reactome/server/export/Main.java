@@ -3,6 +3,7 @@ package org.reactome.server.export;
 import com.martiansoftware.jsap.*;
 import org.reactome.server.export.config.ReactomeNeo4jConfig;
 import org.reactome.server.export.mapping.Mapping;
+import org.reactome.server.export.opentargets.OpenTargetsExporter;
 import org.reactome.server.export.tasks.common.DataExport;
 import org.reactome.server.graph.service.GeneralService;
 import org.reactome.server.graph.utils.ReactomeGraphCore;
@@ -46,7 +47,7 @@ public class Main {
         Set<Class<?>> tests = reflections.getTypesAnnotatedWith(org.reactome.server.export.annotations.DataExport.class);
 
         String path = config.getString("output");
-        if(!path.endsWith("/")) path += "/";
+        if (!path.endsWith("/")) path += "/";
 
         boolean verbose = config.getBoolean("verbose");
 
@@ -57,7 +58,7 @@ public class Main {
         ###################################*/
 
         //Only run the mapping if a specific task has not been specified
-        if(task == null) Mapping.run(generalService, path, verbose);
+        if (task == null) Mapping.run(generalService, path, verbose);
 
         int n = tests.size(), i = 1, count = 0;
         for (Class test : tests) {
@@ -75,9 +76,16 @@ public class Main {
                 e.printStackTrace();
             }
         }
-        if (verbose) {
-            if (task == null) System.out.println("\rTasks finished. " + count + " files has been generated.\n\nPlease ensure the files are available for download.");
-            else System.out.println("Task finished.");
+        if (verbose && task == null) {
+            System.out.println("\rTasks finished. " + count + " files has been generated.\n\nPlease ensure the files are available for download.");
         }
+
+        if (task == null || task.equals("OpenTargetsExporter")) {
+            if (verbose) System.out.print("Running open targets exporter...");
+            OpenTargetsExporter.export(path);
+            if (verbose) System.out.println("\rRunning open targets exporter >> Done");
+        }
+
+        if (task != null) System.out.println("Task finished.");
     }
 }
