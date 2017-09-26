@@ -81,9 +81,9 @@ public class Main {
         }
 
         if (task == null || task.equals("OpenTargetsExporter")) {
-            if (verbose) System.out.print("Running open targets exporter...");
+            if (verbose) System.out.print("Running OpenTargets exporter...");
             OpenTargetsExporter.export(path);
-            if (verbose) System.out.println("\rRunning open targets exporter >> Done");
+            if (verbose) System.out.println("\rRunning OpenTargets exporter >> Done");
         }
 
         if (task != null) System.out.println("Task finished.");
