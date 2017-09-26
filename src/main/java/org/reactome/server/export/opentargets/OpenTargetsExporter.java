@@ -73,7 +73,8 @@ public class OpenTargetsExporter {
             "       pubMedIdentifiers " +
             "ORDER BY rle.stId";
 
-    public static int export(String path){
+    public static void export(String path, boolean verbose){
+        if (verbose) System.out.print("Running OpenTargets exporter...");
 
         REACTOME_VERSION = ReactomeGraphCore.getService(GeneralService.class).getDBVersion();
 
@@ -81,6 +82,7 @@ public class OpenTargetsExporter {
 
         String fileName = path + FILE_NAME + REACTOME_VERSION + FILE_EXTENSION;
 
+        int n = 0;
         try {
             //noinspection unchecked
             Collection<ReactomeEvidence>  evidences = service.customQueryForObjects(ReactomeEvidence.class, query, Collections.EMPTY_MAP);
@@ -91,10 +93,10 @@ public class OpenTargetsExporter {
                 EvidenceString evidenceString = new EvidenceString(evidence);
                 ps.println(mapper.writeValueAsString(evidenceString));
             }
-            return evidences.size();
+            n = evidences.size();
         } catch (CustomQueryException | FileNotFoundException | JsonProcessingException e) {
             e.printStackTrace();
         }
-        return 0;
+        if (verbose) System.out.println("\rRunning OpenTargets exporter >> Done (" + n + " exported)");
     }
 }
