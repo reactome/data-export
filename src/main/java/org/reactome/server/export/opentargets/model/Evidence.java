@@ -29,7 +29,7 @@ public class Evidence {
     private List<String> evidenceCodes;
 
     public Evidence(ReactomeEvidence reactomeEvidence) {
-        if(reactomeEvidence.getMutations()!=null) {
+        if (reactomeEvidence.getMutations() != null) {
             for (String mutationName : reactomeEvidence.getMutations()) {
                 this.knownMutations.add(new Mutation(mutationName));
             }
@@ -40,7 +40,7 @@ public class Evidence {
         this.setEvidenceCodes();
     }
 
-    private void setProvenanceUrls(List<PathwayBase> pathways){
+    private void setProvenanceUrls(List<PathwayBase> pathways) {
         this.urls = new LinkedList<>();
         for (PathwayBase pathway : pathways) {
             this.urls.add(new ProvenanceUrl(pathway.getDisplayName(), "http://reactome.org/PathwayBrowser/#/" + pathway.getStId()));
@@ -94,7 +94,7 @@ public class Evidence {
         this.dateAsserted = formatter.format(dateAsserted);
     }
 
-    private void setEvidenceCodes(){
+    private void setEvidenceCodes() {
         this.evidenceCodes = new LinkedList<>();
         this.evidenceCodes.add("http://purl.obolibrary.org/obo/ECO_0000205");
 //        this.evidenceCodes.add(IDENTIFIERS_ORG + "/eco/ECO:0000205");
