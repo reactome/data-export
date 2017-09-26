@@ -38,16 +38,18 @@ public class OpenTargetsExporter {
             "OPTIONAL MATCH (pe)-[:hasModifiedResidue]->(gmr:GeneticallyModifiedResidue) " +
             "OPTIONAL MATCH (rle)-[:literatureReference]->(lr:LiteratureReference) " +
             "OPTIONAL MATCH (rle)-[:created]->(c:InstanceEdit) " +
-            "RETURN DISTINCT rle.stId AS reaction, CASE WHEN rle.releaseDate IS NOT NULL THEN rle.releaseDate ELSE c.dateTime END AS releaseDate, " +
-            "                re.databaseName AS resource, " +
-            "                CASE WHEN re.variantIdentifier IS NOT NULL THEN re.variantIdentifier ELSE re.identifier END AS identifier, " +
-            "                COLLECT(DISTINCT gmr.displayName) AS mutations, " +
-            "                d.identifier AS doid, " +
-            "                d.databaseName AS diseaseResource, " +
-            "                d.displayName AS disease, " +
-            "                fst.displayName AS activity, " +
-            "                pathways,  " +
-            "                COLLECT(DISTINCT lr.pubMedIdentifier) AS pubMedIdentifiers " +
+            "WITH DISTINCT rle, c, pe, re, COLLECT(gmr.displayName) AS mutations, d, fst, pathways, COLLECT(DISTINCT lr.pubMedIdentifier) AS pubMedIdentifiers " +
+            "RETURN rle.stId AS reaction, " +
+            "       CASE WHEN rle.releaseDate IS NOT NULL THEN rle.releaseDate ELSE c.dateTime END AS releaseDate, " +
+            "       re.databaseName AS resource, " +
+            "       CASE WHEN re.variantIdentifier IS NOT NULL THEN re.variantIdentifier ELSE re.identifier END AS identifier, " +
+            "       mutations, " +
+            "       d.identifier AS doid, " +
+            "       d.databaseName AS diseaseResource, " +
+            "       d.displayName AS disease, " +
+            "       fst.displayName AS activity, " +
+            "       pathways,  " +
+            "       pubMedIdentifiers " +
             "ORDER BY rle.stId " +
             "UNION " +
             "MATCH (d:Disease)<-[:disease]-(rle:ReactionLikeEvent)<-[:hasEvent]-(p:Pathway), " +
@@ -57,16 +59,18 @@ public class OpenTargetsExporter {
             "WITH DISTINCT rle, pe, re, d, COLLECT(DISTINCT {stId: p.stId, displayName: p.displayName}) AS pathways  " +
             "OPTIONAL MATCH (rle)-[:literatureReference]->(lr:LiteratureReference) " +
             "OPTIONAL MATCH (rle)-[:created]->(c:InstanceEdit) " +
-            "RETURN DISTINCT rle.stId as reaction, CASE WHEN rle.releaseDate IS NOT NULL THEN rle.releaseDate ELSE c.dateTime END AS releaseDate, " +
-            "                re.databaseName AS resource, " +
-            "                CASE WHEN re.variantIdentifier IS NOT NULL THEN re.variantIdentifier ELSE re.identifier END AS identifier, " +
-            "                null AS mutations,  " +
-            "                d.identifier AS doid, " +
-            "                d.databaseName AS diseaseResource, " +
-            "                d.displayName AS disease, " +
-            "                \"up_or_down\" AS activity,  " +
-            "                pathways, " +
-            "                COLLECT(DISTINCT lr.pubMedIdentifier) AS pubMedIdentifiers " +
+            "WITH DISTINCT rle, c, re, d, pathways, COLLECT(DISTINCT lr.pubMedIdentifier) AS pubMedIdentifiers " +
+            "RETURN rle.stId as reaction, " +
+            "       CASE WHEN rle.releaseDate IS NOT NULL THEN rle.releaseDate ELSE c.dateTime END AS releaseDate, " +
+            "       re.databaseName AS resource, " +
+            "       CASE WHEN re.variantIdentifier IS NOT NULL THEN re.variantIdentifier ELSE re.identifier END AS identifier, " +
+            "       null AS mutations,  " +
+            "       d.identifier AS doid, " +
+            "       d.databaseName AS diseaseResource, " +
+            "       d.displayName AS disease, " +
+            "       \"up_or_down\" AS activity,  " +
+            "       pathways, " +
+            "       pubMedIdentifiers " +
             "ORDER BY rle.stId";
 
     public static void export(String path){
