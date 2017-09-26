@@ -41,10 +41,10 @@ public class EvidenceString {
 
     public EvidenceString(ReactomeEvidence reactomeEvidence) {
         this.evidence = new Evidence(reactomeEvidence);
-        this.evidenceDisease = new EvidenceDisease(reactomeEvidence.getDiseaseIdentifier(), reactomeEvidence.getDisease());
+        this.evidenceDisease = new EvidenceDisease(reactomeEvidence);
         this.uniqueAssociationFields = new UniqueAssociationFields(reactomeEvidence);
         this.target = new Target(reactomeEvidence);
-        if(reactomeEvidence.getPubMedIdentifiers()!=null && !reactomeEvidence.getPubMedIdentifiers().isEmpty()) {
+        if (reactomeEvidence.getPubMedIdentifiers() != null && !reactomeEvidence.getPubMedIdentifiers().isEmpty()) {
             //Following 1.2.2 specification, the provenance literature references have to be added ALSO at this level
             this.literature = new ProvenanceLiterature(reactomeEvidence.getPubMedIdentifiers());
         }
