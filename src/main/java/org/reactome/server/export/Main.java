@@ -52,9 +52,10 @@ public class Main {
         boolean verbose = config.getBoolean("verbose");
 
         /*############ IMPORTANT ############
-        The export is divided in two sections:
+        The export is divided in three sections:
             1) Generic Mapping Files -> A set of files per resource identifier pointing to different levels of Events
             2) On demand exports -> Based on users *interensting* requests, different files are generated
+            3) OpenTargets export (can be considered as demand export) -> Format and content as requested by OpenTargets
         ###################################*/
 
         //Only run the mapping if a specific task has not been specified
@@ -81,9 +82,7 @@ public class Main {
         }
 
         if (task == null || task.equals("OpenTargetsExporter")) {
-            if (verbose) System.out.print("Running OpenTargets exporter...");
-            int evidencies = OpenTargetsExporter.export(path);
-            if (verbose) System.out.println("\rRunning OpenTargets exporter >> Done (" + evidencies + " exported)");
+            OpenTargetsExporter.export(path, verbose);
         }
 
         if (task != null) System.out.println("Task finished.");
