@@ -34,7 +34,7 @@ public class OpenTargetsExporter {
             "      (efs)-[:functionalStatus|functionalStatusType*]->(fst:FunctionalStatusType), " +
             "      (efs)-[:physicalEntity|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity), " +
             "      (pe)-[:referenceEntity]->(re:ReferenceEntity) " +
-            "WITH DISTINCT rle, pe, re, d, fst, COLLECT(DISTINCT {stId: p.stId, displayName: p.displayName}) AS pathways " +
+            "WITH DISTINCT rle, pe, re, d, fst, COLLECT(DISTINCT {stId: p.stId, displayName: p.displayName}) AS pathways " + //pe is meant to differentiate the different mutations per reference entity -> DO NOT DELETE even though isn't used below
             "OPTIONAL MATCH (pe)-[:hasModifiedResidue]->(gmr:GeneticallyModifiedResidue) " +
             "OPTIONAL MATCH (rle)-[:literatureReference]->(lr:LiteratureReference) " +
             "OPTIONAL MATCH (rle)-[:created]->(c:InstanceEdit) " +
@@ -73,12 +73,11 @@ public class OpenTargetsExporter {
             "       pubMedIdentifiers " +
             "ORDER BY rle.stId";
 
-    public static void export(String path){
+    public static int export(String path){
 
         REACTOME_VERSION = ReactomeGraphCore.getService(GeneralService.class).getDBVersion();
 
         AdvancedDatabaseObjectService service = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
-
 
         String fileName = path + FILE_NAME + REACTOME_VERSION + FILE_EXTENSION;
 
@@ -92,10 +91,10 @@ public class OpenTargetsExporter {
                 EvidenceString evidenceString = new EvidenceString(evidence);
                 ps.println(mapper.writeValueAsString(evidenceString));
             }
-
+            return evidences.size();
         } catch (CustomQueryException | FileNotFoundException | JsonProcessingException e) {
             e.printStackTrace();
         }
-
+        return 0;
     }
 }
