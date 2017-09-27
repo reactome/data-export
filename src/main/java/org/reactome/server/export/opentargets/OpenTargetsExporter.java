@@ -15,6 +15,8 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -82,7 +84,7 @@ public class OpenTargetsExporter {
 
         String fileName = path + FILE_NAME + REACTOME_VERSION + FILE_EXTENSION;
 
-        int n = 0;
+        int n = 0; Set<String> reactions = new HashSet<>();
         try {
             //noinspection unchecked
             Collection<ReactomeEvidence>  evidences = service.customQueryForObjects(ReactomeEvidence.class, query, Collections.EMPTY_MAP);
@@ -90,6 +92,7 @@ public class OpenTargetsExporter {
             PrintStream ps = new PrintStream(new FileOutputStream(new File(fileName)));
             ObjectMapper mapper = new ObjectMapper();
             for (ReactomeEvidence evidence : evidences) {
+                reactions.add(evidence.getReaction());
                 EvidenceString evidenceString = new EvidenceString(evidence);
                 ps.println(mapper.writeValueAsString(evidenceString));
             }
@@ -97,6 +100,6 @@ public class OpenTargetsExporter {
         } catch (CustomQueryException | FileNotFoundException | JsonProcessingException e) {
             e.printStackTrace();
         }
-        if (verbose) System.out.println("\rRunning OpenTargets exporter >> Done (" + n + " exported)");
+        if (verbose) System.out.println("\rRunning OpenTargets exporter >> Done (" + n + " evidences for " + reactions.size() + " reactions)");
     }
 }
