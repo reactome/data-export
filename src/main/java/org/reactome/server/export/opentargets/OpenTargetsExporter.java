@@ -36,10 +36,12 @@ public class OpenTargetsExporter {
             "      (efs)-[:functionalStatus|functionalStatusType*]->(fst:FunctionalStatusType), " +
             "      (efs)-[:physicalEntity|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity), " +
             "      (pe)-[:referenceEntity]->(re:ReferenceEntity) " +
-            "WITH DISTINCT rle, pe, re, d, fst, COLLECT(DISTINCT {stId: p.stId, displayName: p.displayName}) AS pathways " + //pe is meant to differentiate the different mutations per reference entity -> DO NOT DELETE even though isn't used below
+            //pe is meant to differentiate the different mutations per reference entity
+            "WITH DISTINCT rle, pe, re, d, fst, COLLECT(DISTINCT {stId: p.stId, displayName: p.displayName}) AS pathways " +
             "OPTIONAL MATCH (pe)-[:hasModifiedResidue]->(gmr:GeneticallyModifiedResidue) " +
             "OPTIONAL MATCH (rle)-[:literatureReference]->(lr:LiteratureReference) " +
             "OPTIONAL MATCH (rle)-[:created]->(c:InstanceEdit) " +
+            //pe is meant to differentiate the different mutations per reference entity -> DO NOT DELETE even though isn't used below
             "WITH DISTINCT rle, c, pe, re, COLLECT(gmr.displayName) AS mutations, d, fst, pathways, COLLECT(DISTINCT lr.pubMedIdentifier) AS pubMedIdentifiers " +
             "RETURN rle.stId AS reaction, " +
             "       CASE WHEN rle.releaseDate IS NOT NULL THEN rle.releaseDate ELSE c.dateTime END AS releaseDate, " +
