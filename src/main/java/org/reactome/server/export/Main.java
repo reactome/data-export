@@ -55,7 +55,6 @@ public class Main {
         The export is divided in three sections:
             1) Generic Mapping Files -> A set of files per resource identifier pointing to different levels of Events
             2) On demand exports -> Based on users *interensting* requests, different files are generated
-            3) OpenTargets export (can be considered as demand export) -> Format and content as requested by OpenTargets
         ###################################*/
 
         //Only run the mapping if a specific task has not been specified
@@ -81,10 +80,8 @@ public class Main {
             System.out.println("\rTasks finished. " + count + " files has been generated.\n\nPlease ensure the files are available for download.");
         }
 
-        if (task == null || task.equals("OpenTargetsExporter")) {
+        if (task.equals("OpenTargetsExporter")) {
             OpenTargetsExporter.export(path, verbose);
         }
-
-        if (task != null) System.out.println("Task finished.");
     }
 }
