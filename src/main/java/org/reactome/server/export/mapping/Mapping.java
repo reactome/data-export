@@ -144,7 +144,7 @@ public class Mapping {
                 } else if (attribute.equals("Link")) {
                     String link = (String) map.get("Pathway_ID");
                     link = link != null ? link : (String) map.get("Reaction_ID");
-                    line.add("http://reactome.org/PathwayBrowser/#/" + link);
+                    line.add("https://reactome.org/PathwayBrowser/#/" + link);
                 } else if (attribute.equals("Evidence_Code")) {
                     line.add(((Boolean) map.get(attribute)) ? "IEA" : "TAS");
                 } else {
