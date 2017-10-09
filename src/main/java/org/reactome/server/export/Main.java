@@ -80,7 +80,7 @@ public class Main {
             System.out.println("\rTasks finished. " + count + " files has been generated.\n\nPlease ensure the files are available for download.");
         }
 
-        if (task.equals("OpenTargetsExporter")) {
+        if (task != null && task.equals("OpenTargetsExporter")) {
             OpenTargetsExporter.export(path, verbose);
         }
     }
