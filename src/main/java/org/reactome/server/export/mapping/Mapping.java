@@ -83,32 +83,32 @@ public class Mapping {
                         case LOWER_LEVEL_PATHWAY:
                             if (exportPhysicalEntity.toPE) {
                                 result = generalService.query(MappingQueries.queryResourceToPEAndLLP(resource.query), Collections.EMPTY_MAP);
-                                attr = Arrays.asList("Identifier", "Entity_ID", "Entity_Name", "Pathway_ID", "Pathway_Name", "Evidence_Code", "Species");
+                                attr = Arrays.asList("Identifier", "Entity_ID", "Entity_Name", "Pathway_ID", "Link", "Pathway_Name", "Evidence_Code", "Species");
                                 fileName += "_PE_Pathway";
                             } else {
                                 result = generalService.query(MappingQueries.queryResourceToLLP(resource.query), Collections.EMPTY_MAP);
-                                attr = Arrays.asList("Identifier", "Pathway_ID", "Pathway_Name", "Evidence_Code", "Species");
+                                attr = Arrays.asList("Identifier", "Pathway_ID", "Link", "Pathway_Name", "Evidence_Code", "Species");
                             }
                             break;
                         case ALL_PATHWAYS:
                             if (exportPhysicalEntity.toPE) {
                                 result = generalService.query(MappingQueries.queryResourceToPEAndAllPathways(resource.query), Collections.EMPTY_MAP);
-                                attr = Arrays.asList("Identifier", "Entity_ID", "Entity_Name", "Pathway_ID", "Pathway_Name", "Evidence_Code", "Species");
+                                attr = Arrays.asList("Identifier", "Entity_ID", "Entity_Name", "Pathway_ID", "Link", "Pathway_Name", "Evidence_Code", "Species");
                                 fileName += "_PE_All_Levels";
                             } else {
                                 result = generalService.query(MappingQueries.queryResourceToAllPathways(resource.query), Collections.EMPTY_MAP);
-                                attr = Arrays.asList("Identifier", "Pathway_ID", "Pathway_Name", "Evidence_Code", "Species");
+                                attr = Arrays.asList("Identifier", "Pathway_ID", "Link", "Pathway_Name", "Evidence_Code", "Species");
                                 fileName += "_All_Levels";
                             }
                             break;
                         case REACTIONS:
                             if (exportPhysicalEntity.toPE) {
                                 result = generalService.query(MappingQueries.queryResourceToPEAndReactions(resource.query), Collections.EMPTY_MAP);
-                                attr = Arrays.asList("Identifier", "Entity_ID", "Entity_Name", "Reaction_ID", "Reaction_Name", "Evidence_Code", "Species");
+                                attr = Arrays.asList("Identifier", "Entity_ID", "Entity_Name", "Reaction_ID", "Link", "Reaction_Name", "Evidence_Code", "Species");
                                 fileName += "_PE_Reactions";
                             } else {
                                 result = generalService.query(MappingQueries.queryResourceToReactions(resource.query), Collections.EMPTY_MAP);
-                                attr = Arrays.asList("Identifier", "Reaction_ID", "Reaction_Name", "Evidence_Code", "Species");
+                                attr = Arrays.asList("Identifier", "Reaction_ID", "Link", "Reaction_Name", "Evidence_Code", "Species");
                                 fileName += "Reactions";
                             }
                             break;
@@ -134,7 +134,6 @@ public class Mapping {
     private static void printMapping(Result result, Path path, List<String> attributes) throws IOException {
         List<String> lines = new ArrayList<>();
         attributes = new ArrayList<>(attributes);
-        attributes.add(2, "Link");
         for (Map<String, Object> map : result) {
             List<String> line = new ArrayList<>();
             for (String attribute : attributes) {
