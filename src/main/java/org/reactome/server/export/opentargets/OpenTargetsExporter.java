@@ -35,7 +35,7 @@ public class OpenTargetsExporter {
             "      (p:Pathway)-[:hasEvent]->(rle), " +
             "      (efs)-[:functionalStatus|functionalStatusType*]->(fst:FunctionalStatusType), " +
             "      (efs)-[:physicalEntity|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity), " +
-            "      (pe)-[:referenceEntity]->(re:ReferenceEntity) " +
+            "      (pe)-[:referenceEntity]->(re:ReferenceEntity{databaseName:\"UniProt\"}) " +
             //pe is meant to differentiate the different mutations per reference entity
             "WITH DISTINCT rle, pe, re, d, fst, COLLECT(DISTINCT {stId: p.stId, displayName: p.displayName}) AS pathways " +
             "OPTIONAL MATCH (pe)-[:hasModifiedResidue]->(gmr:GeneticallyModifiedResidue) " +
