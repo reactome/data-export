@@ -34,7 +34,7 @@ public class OpenTargetsExporter {
             "MATCH (d:Disease)<-[:disease]-(rle:ReactionLikeEvent)-[:entityFunctionalStatus]->(efs:EntityFunctionalStatus), " +
             "      (p:Pathway)-[:hasEvent]->(rle), " +
             "      (efs)-[:functionalStatus|functionalStatusType*]->(fst:FunctionalStatusType), " +
-            "      (efs)-[:physicalEntity|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity), " +
+            "      (efs)-[:physicalEntity|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity)-[:species]->(:Species{displayName:\"Homo sapiens\"}), " +
             "      (pe)-[:referenceEntity]->(re:ReferenceEntity{databaseName:\"UniProt\"}) " +
             //pe is meant to differentiate the mutations per reference entity
             "WITH DISTINCT rle, pe, re, d, fst, COLLECT(DISTINCT {stId: p.stId, displayName: p.displayName}) AS pathways " +
@@ -58,7 +58,7 @@ public class OpenTargetsExporter {
             "ORDER BY rle.stId " +
             "UNION " +
             "MATCH (d:Disease)<-[:disease]-(rle:ReactionLikeEvent)<-[:hasEvent]-(p:Pathway), " +
-            "      (rle)-[:input|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity), " +
+            "      (rle)-[:input|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity)-[:species]->(:Species{displayName:\"Homo sapiens\"}), " +
             "      (pe)-[:referenceEntity]->(re:ReferenceEntity{databaseName:\"UniProt\"}) " +
             "WHERE NOT (rle)-[:entityFunctionalStatus]->() " +
             "WITH DISTINCT rle, pe, re, d, COLLECT(DISTINCT {stId: p.stId, displayName: p.displayName}) AS pathways  " +
@@ -91,7 +91,7 @@ public class OpenTargetsExporter {
         int n = 0; Set<String> reactions = new HashSet<>();
         try {
             //noinspection unchecked
-            Collection<ReactomeEvidence>  evidences = service.customQueryForObjects(ReactomeEvidence.class, query, Collections.EMPTY_MAP);
+            Collection<ReactomeEvidence> evidences = service.getCustomQueryResults(ReactomeEvidence.class, query, Collections.EMPTY_MAP);
 
             PrintStream ps = new PrintStream(new FileOutputStream(new File(fileName)));
             ObjectMapper mapper = new ObjectMapper();
