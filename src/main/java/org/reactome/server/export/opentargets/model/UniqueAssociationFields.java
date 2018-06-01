@@ -21,6 +21,9 @@ public class UniqueAssociationFields {
     @JsonProperty(value = "reaction_id", required = true)
     public String reaction;
 
+    @JsonProperty(value = "disease", required = true)
+    public String disease;
+
     @JsonProperty(value = "reaction_activity", required = true)
     public String activity;
 
@@ -32,6 +35,7 @@ public class UniqueAssociationFields {
         this.biologicalSubjects = "http://www.identifier.org/" + reactomeEvidence.getResource().toLowerCase() + "/" + reactomeEvidence.getIdentifier();
 
         this.reaction = "http://reactome.org/PathwayBrowser/#/" + reactomeEvidence.getReaction();
+        this.disease = reactomeEvidence.getDiseaseIdentifier();
         this.activity = reactomeEvidence.getActivity();
 
         reactomeEvidence.getActivity();
