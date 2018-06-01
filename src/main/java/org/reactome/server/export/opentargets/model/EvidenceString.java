@@ -18,7 +18,7 @@ public class EvidenceString {
 
     @SuppressWarnings("unused")
     @JsonProperty(value = "validated_against_schema_version", required = true)
-    public String version = "1.2.7";
+    public String version = "1.2.8";
 
     @SuppressWarnings("unused")
     @JsonProperty(value = "access_level", required = true)
