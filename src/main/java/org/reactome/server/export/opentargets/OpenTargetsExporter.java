@@ -42,7 +42,7 @@ public class OpenTargetsExporter {
             "OPTIONAL MATCH (rle)-[:literatureReference]->(lr:LiteratureReference) " +
             "OPTIONAL MATCH (rle)-[:created]->(c:InstanceEdit) " +
             //pe is meant to differentiate the mutations per reference entity -> DO NOT DELETE even though isn't used below
-            "WITH DISTINCT rle, c, pe, re, COLLECT(gmr.displayName) AS mutations, d, fst, pathways, COLLECT(DISTINCT lr.pubMedIdentifier) AS pubMedIdentifiers " +
+            "WITH DISTINCT rle, c, pe, re, COLLECT(DISTINCT gmr.displayName) AS mutations, d, fst, pathways, COLLECT(DISTINCT lr.pubMedIdentifier) AS pubMedIdentifiers " +
             "RETURN DISTINCT rle.stId AS reaction, " +
             "       CASE WHEN rle.releaseDate IS NOT NULL THEN rle.releaseDate ELSE c.dateTime END AS releaseDate, " +
             "       re.databaseName AS resource, " +
