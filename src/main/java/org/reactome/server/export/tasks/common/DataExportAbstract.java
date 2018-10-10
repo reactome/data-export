@@ -20,12 +20,12 @@ import java.util.Map;
  */
 public abstract class DataExportAbstract implements DataExport {
 
-    Boolean doTest() {
+    protected Boolean doTest() {
         return true;
     }
 
-    @SuppressWarnings({"SameReturnValue", "WeakerAccess"})
-    protected Map getMap() {
+    @SuppressWarnings("unchecked")
+    protected Map<String, Object> getMap() {
         return Collections.EMPTY_MAP;
     }
 
@@ -78,7 +78,7 @@ public abstract class DataExportAbstract implements DataExport {
         Files.write(path, lines, Charset.forName("UTF-8"));
     }
 
-    private Path createFile(String path) throws IOException {
+    protected Path createFile(String path) throws IOException {
         Path p = Paths.get(path + getName() + ".txt");
         Files.deleteIfExists(p);
         if(!Files.isSymbolicLink(p.getParent())) Files.createDirectories(p.getParent());
