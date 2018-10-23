@@ -82,7 +82,7 @@ public class OpenTargetsExporter {
     public static void export(String path, boolean verbose){
         if (verbose) System.out.print("Running OpenTargets exporter...");
 
-        REACTOME_VERSION = ReactomeGraphCore.getService(GeneralService.class).getDBVersion();
+        REACTOME_VERSION = ReactomeGraphCore.getService(GeneralService.class).getDBInfo().getVersion();
 
         AdvancedDatabaseObjectService service = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
 
