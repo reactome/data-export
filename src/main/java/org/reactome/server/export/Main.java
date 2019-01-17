@@ -2,9 +2,11 @@ package org.reactome.server.export;
 
 import com.martiansoftware.jsap.*;
 import org.reactome.server.export.config.ReactomeNeo4jConfig;
+import org.reactome.server.export.gmt.GmtExporter;
 import org.reactome.server.export.mapping.Mapping;
 import org.reactome.server.export.opentargets.OpenTargetsExporter;
 import org.reactome.server.export.tasks.common.DataExport;
+import org.reactome.server.graph.service.AdvancedDatabaseObjectService;
 import org.reactome.server.graph.service.GeneralService;
 import org.reactome.server.graph.utils.ReactomeGraphCore;
 import org.reflections.Reflections;
@@ -82,6 +84,11 @@ public class Main {
 
         if (task != null && task.equals("OpenTargetsExporter")) {
             OpenTargetsExporter.export(path, verbose);
+        }
+
+        if (task != null && task.equals("GmtExporter")) {
+            AdvancedDatabaseObjectService service = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
+            GmtExporter.export(service, path, verbose);
         }
     }
 }
