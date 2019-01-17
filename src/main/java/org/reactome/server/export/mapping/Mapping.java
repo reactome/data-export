@@ -22,7 +22,8 @@ public class Mapping {
         CHEBI("ChEBI"),
         ENSEMBL("Ensembl", "(ENSEMBL|Ensembl)"),
         NCBI("NCBI", "NCBI.*"),
-        MIRBASE("miRBase");
+        MIRBASE("miRBase"),
+        IUPHAR("IUPHAR");
 
         private String name;
         private String query;
