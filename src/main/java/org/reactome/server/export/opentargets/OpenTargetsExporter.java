@@ -34,7 +34,7 @@ public class OpenTargetsExporter {
             "MATCH (d:Disease)<-[:disease]-(rle:ReactionLikeEvent)-[:entityFunctionalStatus]->(efs:EntityFunctionalStatus), " +
             "      (p:Pathway)-[:hasEvent]->(rle), " +
             "      (efs)-[:functionalStatus|functionalStatusType*]->(fst:FunctionalStatusType), " +
-            "      (efs)-[:physicalEntity|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity)-[:species]->(:Species{displayName:\"Homo sapiens\"}), " +
+            "      (efs)-[:diseaseEntity|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity)-[:species]->(:Species{displayName:\"Homo sapiens\"}), " +
             "      (pe)-[:referenceEntity]->(re:ReferenceEntity{databaseName:\"UniProt\"}) " +
             //pe is meant to differentiate the mutations per reference entity
             "WITH DISTINCT rle, pe, re, d, fst, COLLECT(DISTINCT {stId: p.stId, displayName: p.displayName}) AS pathways " +
@@ -100,6 +100,7 @@ public class OpenTargetsExporter {
                 EvidenceString evidenceString = new EvidenceString(evidence);
                 ps.println(mapper.writeValueAsString(evidenceString));
             }
+            ps.close();
             n = evidences.size();
         } catch (CustomQueryException | FileNotFoundException | JsonProcessingException e) {
             e.printStackTrace();
