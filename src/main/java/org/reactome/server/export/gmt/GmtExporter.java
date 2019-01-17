@@ -117,7 +117,6 @@ public class GmtExporter {
     }
 
     private static void saveGmtFile(String fileName, Collection<GmtPathway> pathways) throws FileNotFoundException {
-//        for (GmtPathway pathway : pathways) System.out.println(pathway.getTabularFormat());
         PrintStream ps = new PrintStream(new FileOutputStream(new File(fileName)));
         for (GmtPathway pathway : pathways) ps.println(pathway.getTabularFormat());
         ps.close();
