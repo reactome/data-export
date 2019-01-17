@@ -15,10 +15,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Exports the pathway information in GTM format. It uses {@link GmtPathway} to store the result of the query.
+ * The GMT format is a tabular format where the columns are:
+ *   First  -> Pathway Name
+ *   Second -> URI (identifier)
+ *   Other  -> Contained identifiers (based on resource) - separated by tab
+ */
 public class GmtExporter {
 
     private static final Logger logger = LoggerFactory.getLogger("gmt-exporter");
 
+    /**
+     * Resources for which a GMT file is provided
+     */
     @SuppressWarnings("unused")
     private enum Resources {
         UNIPROT("UniProt"),
@@ -75,7 +85,7 @@ public class GmtExporter {
         if (verbose) System.out.println(String.format("\rGMT exporter >> Done [%s]", time));
     }
 
-    private static void exportIdentifiers(AdvancedDatabaseObjectService service, String path, boolean verbose){
+    private static void exportIdentifiers(AdvancedDatabaseObjectService service, String path, boolean verbose) {
         int i = 0, total = Resources.values().length;
         for (Resources resource : Resources.values()) {
             try {
@@ -98,7 +108,7 @@ public class GmtExporter {
         System.out.println("\rRunning GMT file exporter for 'identifiers' >> Done");
     }
 
-    private static void exportGeneNames(AdvancedDatabaseObjectService service, String path, boolean verbose){
+    private static void exportGeneNames(AdvancedDatabaseObjectService service, String path, boolean verbose) {
         try {
             if (verbose) System.out.print("Running GMT file exporter for 'gene names'");
 
@@ -111,7 +121,7 @@ public class GmtExporter {
             String partial_time = getTimeFormatted(System.currentTimeMillis() - partial_start);
             if (verbose) System.out.println("\rRunning GMT file exporter for 'gene names' >> Done");
             logger.info(String.format("GMT file for 'gene names' generated in %s", partial_time));
-        }catch (CustomQueryException | FileNotFoundException e){
+        } catch (CustomQueryException | FileNotFoundException e) {
             e.printStackTrace();
         }
     }
