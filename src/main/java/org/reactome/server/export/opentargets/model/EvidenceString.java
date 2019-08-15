@@ -18,7 +18,7 @@ public class EvidenceString {
 
     @SuppressWarnings("unused")
     @JsonProperty(value = "validated_against_schema_version", required = true)
-    public String version = "1.2.8";
+    public String version = "1.3.0";
 
     @SuppressWarnings("unused")
     @JsonProperty(value = "access_level", required = true)
@@ -32,10 +32,9 @@ public class EvidenceString {
     @JsonProperty(value = "disease", required = true)
     public EvidenceDisease evidenceDisease;
 
-    /**
-     * Added on demand for version 1.2.2 (18/02/2016)
-     */
-    public ProvenanceLiterature literature;
+
+    // Removed on demand for release 19.08 (14/08/2019)
+    //public ProvenanceLiterature literature;
 
     public Evidence evidence;
 
@@ -44,10 +43,10 @@ public class EvidenceString {
         this.evidenceDisease = new EvidenceDisease(reactomeEvidence);
         this.uniqueAssociationFields = new UniqueAssociationFields(reactomeEvidence);
         this.target = new Target(reactomeEvidence);
-        if (reactomeEvidence.getPubMedIdentifiers() != null && !reactomeEvidence.getPubMedIdentifiers().isEmpty()) {
-            //Following 1.2.2 specification, the provenance literature references have to be added ALSO at this level
-            this.literature = new ProvenanceLiterature(reactomeEvidence.getPubMedIdentifiers());
-        }
+//        if (reactomeEvidence.getPubMedIdentifiers() != null && !reactomeEvidence.getPubMedIdentifiers().isEmpty()) {
+//            // Removed on demand for release 19.08 (14/08/2019)
+//            this.literature = new ProvenanceLiterature(reactomeEvidence.getPubMedIdentifiers());
+//        }
     }
 
     @Override

@@ -18,7 +18,7 @@ public class UniqueAssociationFields {
     @JsonProperty(value = "reaction_id", required = true)
     public String reaction;
 
-    @JsonProperty(value = "disease", required = true)
+    @JsonProperty(value = "disease_id", required = true)
     public String disease;
 
     @JsonProperty(value = "reaction_activity", required = true)
