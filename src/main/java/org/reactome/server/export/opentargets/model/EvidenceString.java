@@ -18,7 +18,7 @@ public class EvidenceString {
 
     @SuppressWarnings("unused")
     @JsonProperty(value = "validated_against_schema_version", required = true)
-    public String version = "1.3.0";
+    public String version = "1.6.1";
 
     @SuppressWarnings("unused")
     @JsonProperty(value = "access_level", required = true)
@@ -33,7 +33,7 @@ public class EvidenceString {
     public EvidenceDisease evidenceDisease;
 
 
-    // Removed on demand for release 19.08 (14/08/2019)
+    // Removed on demand for schema 1.6.1 and release 19.08 (14/08/2019)
     //public ProvenanceLiterature literature;
 
     public Evidence evidence;
@@ -43,8 +43,8 @@ public class EvidenceString {
         this.evidenceDisease = new EvidenceDisease(reactomeEvidence);
         this.uniqueAssociationFields = new UniqueAssociationFields(reactomeEvidence);
         this.target = new Target(reactomeEvidence);
+//        Removed on demand for schema 1.6.1 and release 19.08 (14/08/2019)
 //        if (reactomeEvidence.getPubMedIdentifiers() != null && !reactomeEvidence.getPubMedIdentifiers().isEmpty()) {
-//            // Removed on demand for release 19.08 (14/08/2019)
 //            this.literature = new ProvenanceLiterature(reactomeEvidence.getPubMedIdentifiers());
 //        }
     }
