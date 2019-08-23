@@ -5,6 +5,7 @@ import org.reactome.server.export.config.ReactomeNeo4jConfig;
 import org.reactome.server.export.gmt.GmtExporter;
 import org.reactome.server.export.mapping.Mapping;
 import org.reactome.server.export.opentargets.OpenTargetsExporter;
+import org.reactome.server.export.sequence.SequenceExporter;
 import org.reactome.server.export.tasks.common.DataExport;
 import org.reactome.server.graph.service.AdvancedDatabaseObjectService;
 import org.reactome.server.graph.service.GeneralService;
@@ -90,5 +91,11 @@ public class Main {
             AdvancedDatabaseObjectService service = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
             GmtExporter.export(service, path, verbose);
         }
+
+        if (task != null && task.equals("SequenceExporter")) {
+            AdvancedDatabaseObjectService service = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
+            SequenceExporter.export(service, path);
+        }
+
     }
 }
