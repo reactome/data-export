@@ -23,6 +23,6 @@ When executing the jar file following properties have to be set.
 -b  Reactome Neo4j port. DEFAULT: 7474
 -u  Reactome Neo4j user. DEFAULT: neo4j
 -p  Reactome Neo4j password. DEFAULT: neo4j
--o  Output directori. DEFAULT: ./export
+-o  Output directory. DEFAULT: ./export
 -v  Verbose output 
 ```
