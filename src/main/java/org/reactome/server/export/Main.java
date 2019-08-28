@@ -1,6 +1,7 @@
 package org.reactome.server.export;
 
 import com.martiansoftware.jsap.*;
+import com.sun.tools.javah.Gen;
 import org.reactome.server.export.config.ReactomeNeo4jConfig;
 import org.reactome.server.export.gmt.GmtExporter;
 import org.reactome.server.export.mapping.Mapping;
@@ -94,7 +95,7 @@ public class Main {
 
         if (task != null && task.equals("SequenceExporter")) {
             AdvancedDatabaseObjectService service = ReactomeGraphCore.getService(AdvancedDatabaseObjectService.class);
-            SequenceExporter.export(service, path);
+            SequenceExporter.export(service, path, generalService.getDBInfo().getVersion().toString());
         }
 
     }

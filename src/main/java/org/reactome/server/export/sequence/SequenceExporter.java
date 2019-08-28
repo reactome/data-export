@@ -36,17 +36,17 @@ public class SequenceExporter {
                                             "UNWIND ps AS part " +
                                             "RETURN p.stId AS pathway, rle.stId AS reaction, rle.displayName as reactionName, part.uniprot as uniprotId, collect (part.type) as rolesInReaction";
 
-    public static void export(AdvancedDatabaseObjectService service, String path) {
-        exportReactions(service, path);
+    public static void export(AdvancedDatabaseObjectService service, String path, String dbVersion) {
+        exportReactions(service, path, dbVersion);
     }
 
-    private static void exportReactions(AdvancedDatabaseObjectService service, String path) {
+    private static void exportReactions(AdvancedDatabaseObjectService service, String path, String dbVersion) {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("speciesName", "Homo sapiens");
             params.put("refDb", "UniProt");
             Collection<SequenceReaction> reactions = service.getCustomQueryResults(SequenceReaction.class, QUERY_IDS, params);
-            String fileName = path + "reactome_reaction_exporter.txt";
+            String fileName = path + "reactome_reaction_exporter_v" + dbVersion + ".txt";
             saveSequenceFile(fileName, reactions);
         } catch (CustomQueryException | FileNotFoundException e) {
             e.printStackTrace();
@@ -55,6 +55,7 @@ public class SequenceExporter {
 
     private static void saveSequenceFile(String fileName, Collection<SequenceReaction> reactions) throws FileNotFoundException {
         PrintStream ps = new PrintStream(new FileOutputStream(new File(fileName)));
+        ps.println(SequenceReaction.getHeader());
         for (SequenceReaction reaction : reactions) {
             if (reaction.getPathway() != null) {
                 ps.println(reaction.getTabularFormat());

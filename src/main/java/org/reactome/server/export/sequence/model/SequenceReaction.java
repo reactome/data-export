@@ -41,4 +41,8 @@ public class SequenceReaction {
     public String getTabularFormat() {
         return String.format("%s\t%s\t%s\t%s\t%s", pathway, reaction, reactionName, uniprotId, rolesInReaction != null ? "\"" + String.join(",", rolesInReaction) + "\"" : "");
     }
+
+    public static String getHeader() {
+        return "pathway_id\treaction_id\treaction_name\tuniprot_acc\trole_in_reaction";
+    }
 }
