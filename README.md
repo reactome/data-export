@@ -23,6 +23,12 @@ When executing the jar file following properties have to be set.
 -b  Reactome Neo4j port. DEFAULT: 7474
 -u  Reactome Neo4j user. DEFAULT: neo4j
 -p  Reactome Neo4j password. DEFAULT: neo4j
--o  Output directori. DEFAULT: ./export
+-o  Output directory. DEFAULT: ./export
 -v  Verbose output 
+```
+
+#### Open Targets Schema Validator [validator](https://github.com/opentargets/validator)
+
+```console
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES; cat file.json | opentargets_validator --schema https://raw.githubusercontent.com/opentargets/json_schema/1.6.2/opentargets.json
 ```
