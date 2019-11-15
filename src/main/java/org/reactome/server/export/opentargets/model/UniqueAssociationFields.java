@@ -12,11 +12,8 @@ import org.reactome.server.export.opentargets.query.ReactomeEvidence;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UniqueAssociationFields {
 
-    @JsonProperty(value = "biological_objects", required = true)
-    public String biologicalObjects;
-
-    @JsonProperty(value = "biological_subjects", required = true)
-    public String biologicalSubjects;
+    @JsonProperty(value = "target_id", required = true)
+    public String target_id;
 
     @JsonProperty(value = "reaction_id", required = true)
     public String reaction;
@@ -31,8 +28,7 @@ public class UniqueAssociationFields {
     public String mutations = null;
 
     public UniqueAssociationFields(ReactomeEvidence reactomeEvidence) {
-        this.biologicalObjects = reactomeEvidence.getDiseaseIdentifier();
-        this.biologicalSubjects = "http://www.identifier.org/" + reactomeEvidence.getResource().toLowerCase() + "/" + reactomeEvidence.getIdentifier();
+        this.target_id = "http://www.identifier.org/" + reactomeEvidence.getResource().toLowerCase() + "/" + reactomeEvidence.getIdentifier();
 
         this.reaction = "http://reactome.org/PathwayBrowser/#/" + reactomeEvidence.getReaction();
         this.disease = reactomeEvidence.getDiseaseIdentifier();

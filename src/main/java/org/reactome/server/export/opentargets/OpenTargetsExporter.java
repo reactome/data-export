@@ -34,7 +34,7 @@ public class OpenTargetsExporter {
             "MATCH (d:Disease)<-[:disease]-(rle:ReactionLikeEvent)-[:entityFunctionalStatus]->(efs:EntityFunctionalStatus), " +
             "      (p:Pathway)-[:hasEvent]->(rle), " +
             "      (efs)-[:functionalStatus|functionalStatusType*]->(fst:FunctionalStatusType), " +
-            "      (efs)-[:diseaseEntity|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity)-[:species]->(:Species{displayName:\"Homo sapiens\"}), " +
+            "      (efs)-[:hasComponent|hasMember|hasCandidate|repeatedUnit|diseaseEntity*]->(pe:PhysicalEntity)-[:species]->(:Species{displayName:\"Homo sapiens\"}), " +
             "      (pe)-[:referenceEntity]->(re:ReferenceEntity{databaseName:\"UniProt\"}) " +
             //pe is meant to differentiate the mutations per reference entity
             "WITH DISTINCT rle, pe, re, d, fst, COLLECT(DISTINCT {stId: p.stId, displayName: p.displayName}) AS pathways " +
@@ -46,7 +46,6 @@ public class OpenTargetsExporter {
             "RETURN DISTINCT rle.stId AS reaction, " +
             "       CASE WHEN rle.releaseDate IS NOT NULL THEN rle.releaseDate ELSE c.dateTime END AS releaseDate, " +
             "       re.databaseName AS resource, " +
-//            "       CASE WHEN re.variantIdentifier IS NOT NULL THEN re.variantIdentifier ELSE re.identifier END AS identifier, " +
             "       re.identifier AS identifier, " +
             "       mutations, " +
             "       d.identifier AS doid, " +
@@ -65,10 +64,9 @@ public class OpenTargetsExporter {
             "OPTIONAL MATCH (rle)-[:literatureReference]->(lr:LiteratureReference) " +
             "OPTIONAL MATCH (rle)-[:created]->(c:InstanceEdit) " +
             "WITH DISTINCT rle, c, re, d, pathways, COLLECT(DISTINCT lr.pubMedIdentifier) AS pubMedIdentifiers " +
-            "RETURN DISTINCT rle.stId as reaction, " +  //DISTINCT CAN BE REMOVED IF
+            "RETURN DISTINCT rle.stId as reaction, " +
             "       CASE WHEN rle.releaseDate IS NOT NULL THEN rle.releaseDate ELSE c.dateTime END AS releaseDate, " +
             "       re.databaseName AS resource, " +
-//            "       CASE WHEN re.variantIdentifier IS NOT NULL THEN re.variantIdentifier ELSE re.identifier END AS identifier, " +
             "       re.identifier AS identifier, " +
             "       null AS mutations,  " +
             "       d.identifier AS doid, " +

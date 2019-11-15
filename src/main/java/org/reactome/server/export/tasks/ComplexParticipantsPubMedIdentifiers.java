@@ -30,7 +30,7 @@ public class ComplexParticipantsPubMedIdentifiers extends DataExportAbstract {
 
     @Override
     public String getName() {
-        return "ComplexParticipants2PubMedIdentifiers_human";
+        return "ComplexParticipantsPubMedIdentifiers_human";
     }
 
     @Override
