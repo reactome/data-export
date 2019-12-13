@@ -33,7 +33,7 @@ public class SequenceExporter extends DataExportAbstract {
                                             "WITH rle, ps + COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'positive'} END) AS ps " +
                                             "OPTIONAL MATCH path=(p:Pathway)-[:hasEvent]->(rle) " +
                                             "UNWIND ps AS part " +
-                                            "RETURN p.stId AS pathway, rle.stId AS reaction, rle.displayName as reactionName, part.uniprot as uniprotId, collect (part.type) as rolesInReaction";
+                                            "RETURN p.stId AS pathway_id, rle.stId AS reaction_id, rle.displayName as reaction_name, part.uniprot as uniprot_acc, collect (part.type) as role_in_reaction";
 
     @Override
     public String getQuery() {
