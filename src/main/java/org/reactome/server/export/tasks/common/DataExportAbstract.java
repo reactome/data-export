@@ -20,6 +20,8 @@ import java.util.Map;
  */
 public abstract class DataExportAbstract implements DataExport {
 
+    private GeneralService generalService;
+
     protected Boolean doTest() {
         return true;
     }
@@ -31,9 +33,10 @@ public abstract class DataExportAbstract implements DataExport {
 
     @SuppressWarnings("unchecked")
     @Override
-    public boolean run(GeneralService genericService, String path) {
+    public boolean run(GeneralService generalService, String path) {
+        this.generalService = generalService;
         if (doTest()) {
-            Result result = genericService.query(getQuery(), getMap());
+            Result result = generalService.query(getQuery(), getMap());
             if (result == null || !result.iterator().hasNext()) return false;
             try {
                 printResult(result, createFile(path));
@@ -79,7 +82,9 @@ public abstract class DataExportAbstract implements DataExport {
     }
 
     protected Path createFile(String path) throws IOException {
-        Path p = Paths.get(path + getName() + ".txt");
+        String filename = path + getName() + ".txt";
+        if (printDbVersion()) filename = filename.replace(".txt", "_v" + generalService.getDBInfo().getVersion() + ".txt");
+        Path p = Paths.get(filename);
         Files.deleteIfExists(p);
         if(!Files.isSymbolicLink(p.getParent())) Files.createDirectories(p.getParent());
         Files.createFile(p);

@@ -1,21 +1,20 @@
-package org.reactome.server.export.sequence;
+package org.reactome.server.export.tasks;
 
-import org.reactome.server.export.sequence.model.SequenceReaction;
-import org.reactome.server.graph.exception.CustomQueryException;
-import org.reactome.server.graph.service.AdvancedDatabaseObjectService;
+import org.neo4j.ogm.model.Result;
+import org.reactome.server.export.annotations.DataExport;
+import org.reactome.server.export.tasks.common.DataExportAbstract;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.util.Collection;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Guilherme S Viteri <gviteri@ebi.ac.uk>
  */
-public class SequenceExporter {
+@DataExport
+public class SequenceExporter extends DataExportAbstract {
+
     private static final String QUERY_IDS = "MATCH (rle:ReactionLikeEvent{speciesName:{speciesName}}) " +
                                             "OPTIONAL MATCH (rle)-[:input|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
                                             "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:{refDb}}) " +
@@ -36,31 +35,31 @@ public class SequenceExporter {
                                             "UNWIND ps AS part " +
                                             "RETURN p.stId AS pathway, rle.stId AS reaction, rle.displayName as reactionName, part.uniprot as uniprotId, collect (part.type) as rolesInReaction";
 
-    public static void export(AdvancedDatabaseObjectService service, String path, String dbVersion) {
-        exportReactions(service, path, dbVersion);
+    @Override
+    public String getQuery() {
+        return QUERY_IDS;
     }
 
-    private static void exportReactions(AdvancedDatabaseObjectService service, String path, String dbVersion) {
-        try {
-            Map<String, Object> params = new HashMap<>();
-            params.put("speciesName", "Homo sapiens");
-            params.put("refDb", "UniProt");
-            Collection<SequenceReaction> reactions = service.getCustomQueryResults(SequenceReaction.class, QUERY_IDS, params);
-            String fileName = path + "reactome_reaction_exporter_v" + dbVersion + ".txt";
-            saveSequenceFile(fileName, reactions);
-        } catch (CustomQueryException | FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    @Override
+    protected Map<String, Object> getMap() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("speciesName", "Homo sapiens");
+        params.put("refDb", "UniProt");
+        return params;
     }
 
-    private static void saveSequenceFile(String fileName, Collection<SequenceReaction> reactions) throws FileNotFoundException {
-        PrintStream ps = new PrintStream(new FileOutputStream(new File(fileName)));
-        ps.println(SequenceReaction.getHeader());
-        for (SequenceReaction reaction : reactions) {
-            if (reaction.getPathway() != null) {
-                ps.println(reaction.getTabularFormat());
-            }
-        }
-        ps.close();
+    @Override
+    public void printResult(Result result, Path path) throws IOException {
+        print(result, path, "pathway_id", "reaction_id", "reaction_name", "uniprot_acc", "role_in_reaction");
+    }
+
+    @Override
+    public String getName() {
+        return "reactome_reaction_exporter";
+    }
+
+    @Override
+    public boolean printDbVersion() {
+        return true;
     }
 }

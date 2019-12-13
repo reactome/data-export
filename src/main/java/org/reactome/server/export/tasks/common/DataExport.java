@@ -6,5 +6,9 @@ public interface DataExport {
 
     String getName();
 
-    boolean run(GeneralService genericService, String path);
+    boolean run(GeneralService generalService, String path);
+
+    default boolean printDbVersion() {
+        return false;
+    }
 }
