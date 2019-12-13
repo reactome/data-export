@@ -46,9 +46,11 @@ public enum Activity {
                 return Activity.PARTIAL_LOSS_OF_FUNCTION;
             case "up_or_down":
                 return Activity.UP_OR_DOWN;
+            case "increased_translational_product_level":
+                return Activity.INCREASED_TRANSLATIONAL_PRODUCT_LEVEL;
             default:
-                System.err.println("Not activity for" + activity);
-                return null;
+                System.err.println("Not activity found for [" + activity + "]. Please open Activity.java and add it.");
+                throw new IllegalArgumentException("Not activity found for [" + activity + "]. Please open Activity.java and add it.");
         }
     }
 }
