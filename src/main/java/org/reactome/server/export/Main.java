@@ -67,10 +67,10 @@ public class Main {
             try {
                 Object object = test.newInstance();
                 DataExport dataExport = (DataExport) object;
-                if (task == null || dataExport.getName().equals(task)) {
+                if (task == null || (dataExport.getName().equals(task) || dataExport.getClass().getSimpleName().equals(task)) ) {
                     if (verbose) {
                         if (task == null) System.out.print("\rRunning task " + dataExport.getName() + " [" + (i++) + " of " + n + "]");
-                        else System.out.println("Running task " + dataExport.getName());
+                        else System.out.println("Running task " + dataExport.getName() + " [ class: " + dataExport.getClass().getSimpleName() + " ]");
                     }
                     if (dataExport.run(generalService, path)) count++;
                 }

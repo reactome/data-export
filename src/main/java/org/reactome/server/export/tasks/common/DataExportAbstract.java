@@ -5,7 +5,7 @@ import org.neo4j.ogm.model.Result;
 import org.reactome.server.graph.service.GeneralService;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -58,27 +58,34 @@ public abstract class DataExportAbstract implements DataExport {
 
     protected final void print(Result result, Path path, boolean header, String... attributes) throws IOException {
         List<String> lines = new ArrayList<>();
-        if(header) lines.add(StringUtils.join(attributes, "\t"));
+        if (header) lines.add(StringUtils.join(attributes, "\t"));
         for (Map<String, Object> map : result) {
             List<String> line = new ArrayList<>();
+            boolean lineHasNullValues = false;
             for (String attribute : attributes) {
                 // Some results might be list of elements. In some cases we use REDUCE and the output looks like
                 // ["a", "b", "c", ] and we want it to look like ["a", "b", "c"].
                 //               ^ we remove this comma and the space after it
                 // That's why we replace ", ]$" by "]"
                 Object aux = map.get(attribute);
-                if(aux instanceof Object[]){
+                if (aux instanceof Object[]) {
                     StringBuilder rtn = new StringBuilder("[");
                     for (Object item : (Object[]) aux) {
                         rtn.append(item).append(", ");
                     }
                     aux = rtn.append("]").toString();
                 }
+
+                lineHasNullValues = (aux == null) || lineHasNullValues;
+
                 line.add((aux == null ? "-" : ("" + aux).replaceAll(", ]$", "]")));
+
             }
-            lines.add(StringUtils.join(line, "\t"));
+            if (!lineHasNullValues || addNullValues()) {
+                lines.add(StringUtils.join(line, "\t"));
+            }
         }
-        Files.write(path, lines, Charset.forName("UTF-8"));
+        Files.write(path, lines, StandardCharsets.UTF_8);
     }
 
     protected Path createFile(String path) throws IOException {
@@ -86,7 +93,7 @@ public abstract class DataExportAbstract implements DataExport {
         if (printDbVersion()) filename = filename.replace(".txt", "_v" + generalService.getDBInfo().getVersion() + ".txt");
         Path p = Paths.get(filename);
         Files.deleteIfExists(p);
-        if(!Files.isSymbolicLink(p.getParent())) Files.createDirectories(p.getParent());
+        if (!Files.isSymbolicLink(p.getParent())) Files.createDirectories(p.getParent());
         Files.createFile(p);
         return p;
     }

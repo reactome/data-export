@@ -62,4 +62,9 @@ public class SequenceExporter extends DataExportAbstract {
     public boolean printDbVersion() {
         return true;
     }
+
+    @Override
+    public boolean addNullValues() {
+        return false;
+    }
 }
