@@ -15,7 +15,7 @@ import java.util.Map;
 @DataExport
 public class SequenceExporter extends DataExportAbstract {
 
-    private static final String QUERY_IDS = "MATCH (rle:ReactionLikeEvent{speciesName:{speciesName}}) " +
+    private static final String QUERY_IDS = "MATCH (rle:ReactionLikeEvent) " +
                                             "OPTIONAL MATCH (rle)-[:input|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
                                             "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:{refDb}}) " +
                                             "WITH rle, COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'input'} END) AS ps " +
@@ -31,9 +31,10 @@ public class SequenceExporter extends DataExportAbstract {
                                             "OPTIONAL MATCH (rle)-[:regulatedBy]->(:PositiveRegulation)-[:regulator|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
                                             "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:{refDb}}) " +
                                             "WITH rle, ps + COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'positive'} END) AS ps " +
-                                            "OPTIONAL MATCH path=(p:Pathway)-[:hasEvent]->(rle) " +
+                                            "MATCH path=(p:Pathway{speciesName:{speciesName}})-[:hasEvent]->(rle) " +
                                             "UNWIND ps AS part " +
-                                            "RETURN p.stId AS pathway_id, rle.stId AS reaction_id, rle.displayName as reaction_name, part.uniprot as uniprot_acc, collect (part.type) as role_in_reaction";
+                                            "RETURN p.stId AS pathway_id, rle.stId AS reaction_id, rle.displayName as reaction_name, part.uniprot as uniprot_acc, collect (part.type) as role_in_reaction " +
+                                            "ORDER BY pathway_id, reaction_id, uniprot_acc";
 
     @Override
     public String getQuery() {
