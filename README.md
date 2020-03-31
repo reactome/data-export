@@ -16,7 +16,7 @@ The data-export can be executed by running the executable jar file. Please ensur
 
 **Properties**
 
-When executing the jar file following properties have to be set.
+When executing the jar file the following properties have to be set.
 
 ```console
 -h  Reactome Neo4j host. DEFAULT: localhost
@@ -24,8 +24,17 @@ When executing the jar file following properties have to be set.
 -u  Reactome Neo4j user. DEFAULT: neo4j
 -p  Reactome Neo4j password. DEFAULT: neo4j
 -o  Output directory. DEFAULT: ./export
--v  Verbose output 
+-v  Verbose output
+
+java -Xmx10G -jar target/data-exporter-jar-with-dependencies.jar <arguments> 
 ```
+
+**Recommendations**
+
+Ensembl mapping file may cause ```java.lang.OutOfMemoryError: GC overhead limit exceeded``` 
+due to excessive data returned in its query. Before you experience that, we recommend that you adjust memory setting to ```-Xmx10G```
+
+### Extras
 
 #### Open Targets Schema Validator [validator](https://github.com/opentargets/validator)
 
