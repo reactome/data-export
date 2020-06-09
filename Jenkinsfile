@@ -39,7 +39,7 @@ pipeline{
 				script{
 					sh "mkdir -p ${folder}"
 					withCredentials([usernamePassword(credentialsId: 'neo4jUsernamePassword', passwordVariable: 'pass', usernameVariable: 'user')]){
-						sh "java -jar target/data-export-jar-with-dependencies.jar --user $user --password $pass --output ./${folder} --verbose"
+						sh "java -Xmx${env.JAVA_MEM_MAX}m -jar target/data-export-jar-with-dependencies.jar --user $user --password $pass --output ./${folder} --verbose"
 					}
 				}
 			}
