@@ -25,6 +25,7 @@ pipeline{
 				}
 			}
 		}
+		/*
 		// This stage builds the jar file using maven.
 		stage('Setup: Build jar file'){
 			steps{
@@ -44,20 +45,21 @@ pipeline{
 				}
 			}
 		}
-		/*
+		*/
 		// Archive everything on S3, and move the 'diagram' folder to the download/vXX folder.
 		stage('Post: Archive Outputs'){
 			steps{
 				script{
-					def s3Path = "${env.S3_RELEASE_DIRECTORY_URL}/${currentRelease}/fireworks"
-					def archive = "fireworks-v${currentRelease}.tgz"
+					def s3Path = "${env.S3_RELEASE_DIRECTORY_URL}/${currentRelease}/data_export"
+					def archive = "export-v${currentRelease}.tgz"
 					sh "tar -zcvf ${archive} ${folder}"
-					sh "mv ${folder} ${env.ABS_DOWNLOAD_PATH}/${currentRelease}/" 
+					sh "mv ${folder}/* ${env.ABS_DOWNLOAD_PATH}/${currentRelease}/" 
+					sh "gzip logs/*"
+					sh "aws s3 --no-progress --recursive cp logs/ $s3Path/logs/"
 					sh "aws s3 --no-progress cp ${archive} $s3Path/"
-					sh "rm ${archive}"
+					sh "rm -r logs/ ${folder} ${archive}"
 				}
 			}
 		}
-		*/
 	}
 }
