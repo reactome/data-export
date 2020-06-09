@@ -25,7 +25,6 @@ pipeline{
 				}
 			}
 		}
-		/*
 		// This stage builds the jar file using maven.
 		stage('Setup: Build jar file'){
 			steps{
@@ -34,7 +33,7 @@ pipeline{
 				}
 			}
 		}
-		// Execute the jar file, .
+		// Execute the jar file, producing data-export files.
 		stage('Main: Run Data-Export'){
 			steps{
 				script{
@@ -45,7 +44,6 @@ pipeline{
 				}
 			}
 		}
-		*/
 		// Archive everything on S3, and move the 'diagram' folder to the download/vXX folder.
 		stage('Post: Archive Outputs'){
 			steps{
