@@ -82,6 +82,8 @@ public class ReactomeEvidence {
                 return "http://purl.obolibrary.org/obo/HP_" + identifier;
             case "omim":
                 return "http://www.omim.org/entry/" + identifier;
+            case "mondo":
+                return "http://purl.obolibrary.org/obo/MONDO_" + identifier;
             default:
                 return "http://www.ebi.ac.uk/" + resource.toLowerCase() + "/" + resource + "_" + identifier;
         }
