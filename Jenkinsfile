@@ -38,7 +38,7 @@ pipeline{
 					sh "mkdir -p ${env.OUTPUT_FOLDER}"
 					withCredentials([usernamePassword(credentialsId: 'neo4jUsernamePassword', passwordVariable: 'pass', usernameVariable: 'user')]){
 						// This is a very memory-intensive step, and as such it is necessary to stop unused services to get it to run to completion.
-						// At time of writing, the source of the problem seems to come from the 'Ensembl' mappings.
+						// At time of writing (December 2020), the source of the problem seems to come from the 'Ensembl' mappings.
 						sh "sudo service mysql stop"
 						sh "sudo service tomcat7 stop"
 
