@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -61,7 +61,7 @@ public class ComplexParticipantsPubMedIdentifiers extends DataExportAbstract {
                 List<String> lines = res.stream().map(ComplexParticipants::toString).collect(Collectors.toList());
                 if (!lines.isEmpty()) {
                     lines.add(0, "identifier\tname\tparticipants\tparticipatingComplex\tpubMedIdentifiers");
-                    Files.write(createFile(path), lines, Charset.forName("UTF-8"));
+                    Files.write(createFile(path), lines, StandardCharsets.UTF_8);
                     return true;
                 }
             } catch (CustomQueryException | IOException e) {

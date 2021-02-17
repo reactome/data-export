@@ -13,10 +13,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -42,19 +39,19 @@ public class OpenTargetsExporter {
             "OPTIONAL MATCH (rle)-[:literatureReference]->(lr:LiteratureReference) " +
             "OPTIONAL MATCH (rle)-[:created]->(c:InstanceEdit) " +
             //pe is meant to differentiate the mutations per reference entity -> DO NOT DELETE even though isn't used below
-            "WITH DISTINCT rle, c, pe, re, COLLECT(DISTINCT gmr.displayName) AS mutations, d, fst, pathways, COLLECT(DISTINCT lr.pubMedIdentifier) AS pubMedIdentifiers " +
-            "RETURN DISTINCT rle.stId AS reaction, " +
-            "       CASE WHEN rle.releaseDate IS NOT NULL THEN rle.releaseDate ELSE c.dateTime END AS releaseDate, " +
+            "WITH DISTINCT rle, c, pe, re, COLLECT(DISTINCT gmr.displayName) AS relMutations, d, fst, pathways, COLLECT(DISTINCT lr.pubMedIdentifier) AS pubMedIdentifiers " +
+            "ORDER BY rle.stId " +
+            "UNWIND relMutations AS mutation " +
+            "RETURN DISTINCT {stId: rle.stId, displayName: rle.displayName} AS reaction, " +
             "       re.databaseName AS resource, " +
             "       re.identifier AS identifier, " +
-            "       mutations, " +
+            "       COLLECT(DISTINCT mutation) AS mutations, " +
             "       d.identifier AS doid, " +
             "       d.databaseName AS diseaseResource, " +
             "       d.displayName AS disease, " +
             "       fst.displayName AS activity, " +
             "       pathways,  " +
             "       pubMedIdentifiers " +
-            "ORDER BY rle.stId " +
             "UNION " +
             "MATCH (d:Disease)<-[:disease]-(rle:ReactionLikeEvent)<-[:hasEvent]-(p:Pathway), " +
             "      (rle)-[:input|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity)-[:species]->(:Species{displayName:\"Homo sapiens\"}), " +
@@ -64,8 +61,8 @@ public class OpenTargetsExporter {
             "OPTIONAL MATCH (rle)-[:literatureReference]->(lr:LiteratureReference) " +
             "OPTIONAL MATCH (rle)-[:created]->(c:InstanceEdit) " +
             "WITH DISTINCT rle, c, re, d, pathways, COLLECT(DISTINCT lr.pubMedIdentifier) AS pubMedIdentifiers " +
-            "RETURN DISTINCT rle.stId as reaction, " +
-            "       CASE WHEN rle.releaseDate IS NOT NULL THEN rle.releaseDate ELSE c.dateTime END AS releaseDate, " +
+            "ORDER BY rle.stId " +
+            "RETURN DISTINCT {stId: rle.stId, displayName: rle.displayName} AS reaction, " +
             "       re.databaseName AS resource, " +
             "       re.identifier AS identifier, " +
             "       null AS mutations,  " +
@@ -74,8 +71,7 @@ public class OpenTargetsExporter {
             "       d.displayName AS disease, " +
             "       \"up_or_down\" AS activity,  " +
             "       pathways, " +
-            "       pubMedIdentifiers " +
-            "ORDER BY rle.stId";
+            "       pubMedIdentifiers ";
 
     public static void export(String path, boolean verbose){
         if (verbose) System.out.print("Running OpenTargets exporter...");
@@ -86,23 +82,42 @@ public class OpenTargetsExporter {
 
         String fileName = path + FILE_NAME + REACTOME_VERSION + FILE_EXTENSION;
 
-        int n = 0; Set<String> reactions = new HashSet<>();
+        int evidences = 0;
+        Map<String, Integer> reactionPerDiseases = new HashMap<>();
+        Set<String> uniqueReactions = new HashSet<>();
         try {
             //noinspection unchecked
-            Collection<ReactomeEvidence> evidences = service.getCustomQueryResults(ReactomeEvidence.class, query, Collections.EMPTY_MAP);
+            Collection<ReactomeEvidence> reactomeEvidencesQueryResult = service.getCustomQueryResults(ReactomeEvidence.class, query, Collections.EMPTY_MAP);
 
             PrintStream ps = new PrintStream(new FileOutputStream(new File(fileName)));
             ObjectMapper mapper = new ObjectMapper();
-            for (ReactomeEvidence evidence : evidences) {
-                reactions.add(evidence.getReaction());
-                EvidenceString evidenceString = new EvidenceString(evidence);
+            for (ReactomeEvidence reactomeEvidence : reactomeEvidencesQueryResult) {
+                EvidenceString evidenceString = new EvidenceString(reactomeEvidence);
                 ps.println(mapper.writeValueAsString(evidenceString));
+                evidences += reactomeEvidence.getMutations().size();
+                // counting unique reactions
+                uniqueReactions.add(reactomeEvidence.getReaction().getStId());
+                // Same reaction appears more than once if they refer to different disease
+                reactionPerDiseases.merge(reactomeEvidence.getReaction().getStId()+reactomeEvidence.getSourceDiseaseIdentifier(), 1, Integer::sum);
             }
+
+            int extras = 0;
+            for (String reactionPlusDiseaseKey : reactionPerDiseases.keySet()) {
+                int sum = reactionPerDiseases.get(reactionPlusDiseaseKey);
+                // If reaction ID has only, it has been counted already. Otherwise sum different DOID.
+                extras += (sum <= 1) ? 0 : (sum - 1);
+            }
+
+            // adding up
+            evidences += extras;
+
             ps.close();
-            n = evidences.size();
+
         } catch (CustomQueryException | FileNotFoundException | JsonProcessingException e) {
             e.printStackTrace();
         }
-        if (verbose) System.out.println("\rRunning OpenTargets exporter >> Done (" + n + " evidences for " + reactions.size() + " reactions)");
+
+        if (verbose) System.out.println("\rRunning OpenTargets exporter >> Done (" + evidences + " evidences for " + uniqueReactions.size() + " reactions)");
+
     }
 }

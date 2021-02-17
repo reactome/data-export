@@ -31,7 +31,6 @@ public abstract class DataExportAbstract implements DataExport {
         return Collections.EMPTY_MAP;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean run(GeneralService generalService, String path) {
         this.generalService = generalService;

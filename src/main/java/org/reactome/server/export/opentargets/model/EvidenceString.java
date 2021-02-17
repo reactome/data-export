@@ -2,66 +2,91 @@ package org.reactome.server.export.opentargets.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.reactome.server.export.opentargets.query.PathwayBase;
 import org.reactome.server.export.opentargets.query.ReactomeEvidence;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * JSON Schema Migration - https://raw.githubusercontent.com/opentargets/json_schema/2.0.X/opentargets.json
+ * @author Guilherme Viteri
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EvidenceString {
 
-    @SuppressWarnings("unused")
-    public String type = "affected_pathway";
-
-    @SuppressWarnings("unused")
+    @JsonProperty(value = "datasourceId", required = true)
     public String sourceID = "reactome";
 
-    @SuppressWarnings("unused")
-    @JsonProperty(value = "validated_against_schema_version", required = true)
-    public String version = "1.6.1";
+    @JsonProperty(value = "datatypeId")
+    public String type = "affected_pathway";
 
-    @SuppressWarnings("unused")
-    @JsonProperty(value = "access_level", required = true)
-    public String accessLevel = "public";
+    @JsonProperty(value = "diseaseFromSource")
+    public String diseaseFromSource;
 
-    @JsonProperty(value = "unique_association_fields", required = true)
-    public UniqueAssociationFields uniqueAssociationFields;
+    @JsonProperty(value = "diseaseFromSourceId")
+    public String diseaseFromSourceId;
 
-    public Target target;
+    @JsonProperty(value = "diseaseFromSourceMappedId")
+    public String diseaseFromSourceMappedId;
 
-    @JsonProperty(value = "disease", required = true)
-    public EvidenceDisease evidenceDisease;
+    @JsonProperty(value = "functionalConsequenceId")
+    public String functionalConsequenceId;
 
+    @JsonProperty(value = "literature")
+    public List<String> literature;
 
-    // Removed on demand for schema 1.6.1 and release 19.08 (14/08/2019)
-    //public ProvenanceLiterature literature;
+    @JsonProperty(value = "pathways")
+    public List<Pathway> pathways = new ArrayList<>();
 
-    public Evidence evidence;
+    @JsonProperty(value = "reactionId")
+    public String reactionId;
 
-    public EvidenceString(ReactomeEvidence reactomeEvidence) {
-        this.evidence = new Evidence(reactomeEvidence);
-        this.evidenceDisease = new EvidenceDisease(reactomeEvidence);
-        this.uniqueAssociationFields = new UniqueAssociationFields(reactomeEvidence);
-        this.target = new Target(reactomeEvidence);
-//        Removed on demand for schema 1.6.1 and release 19.08 (14/08/2019)
-//        if (reactomeEvidence.getPubMedIdentifiers() != null && !reactomeEvidence.getPubMedIdentifiers().isEmpty()) {
-//            this.literature = new ProvenanceLiterature(reactomeEvidence.getPubMedIdentifiers());
-//        }
+    @JsonProperty(value = "reactionName")
+    public String reactionName;
+
+    @JsonProperty(value = "targetFromSourceId", required = true)
+    public String targetFromSourceId;
+
+    @JsonProperty(value = "targetModulation")
+    public String targetModulation;
+
+    @JsonProperty(value = "variantAminoacidDescriptions")
+    public List<String> variantAminoacidDescriptions;
+
+    public EvidenceString (ReactomeEvidence reactomeEvidence) {
+        this.diseaseFromSource = reactomeEvidence.getDisease();
+        this.diseaseFromSourceId = reactomeEvidence.getSourceDiseaseIdentifier();
+        this.diseaseFromSourceMappedId = reactomeEvidence.getMappedDiseaseIdentifier();
+        this.literature = reactomeEvidence.getPubMedIdentifiers();
+        setPathways(reactomeEvidence.getPathways());
+        this.reactionId = reactomeEvidence.getReaction().getStId();
+        this.reactionName = reactomeEvidence.getReaction().getDisplayName();
+        this.targetFromSourceId = reactomeEvidence.getIdentifier();
+        this.targetModulation = reactomeEvidence.getActivity();
+        this.variantAminoacidDescriptions = reactomeEvidence.getMutations();
+    }
+
+    private void setPathways(List<PathwayBase> pathwaysBase) {
+        for (PathwayBase pathwayBase : pathwaysBase) {
+            pathways.add(new Pathway(pathwayBase.getStId(), pathwayBase.getDisplayName()));
+        }
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        EvidenceString that = (EvidenceString) o;
-
-        return !(uniqueAssociationFields != null ? !uniqueAssociationFields.equals(that.uniqueAssociationFields) : that.uniqueAssociationFields != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return uniqueAssociationFields != null ? uniqueAssociationFields.hashCode() : 0;
+    public String toString() {
+        return "EvidenceString{" +
+                "sourceID='" + sourceID + '\'' +
+                ", type='" + type + '\'' +
+                ", diseaseFromSource='" + diseaseFromSource + '\'' +
+                ", diseaseFromSourceId='" + diseaseFromSourceId + '\'' +
+                ", diseaseFromSourceMappedId='" + diseaseFromSourceMappedId + '\'' +
+                ", functionalConsequenceId='" + functionalConsequenceId + '\'' +
+                ", literature=" + literature +
+                ", reactionId='" + reactionId + '\'' +
+                ", targetFromSourceId='" + targetFromSourceId + '\'' +
+                ", targetModulation='" + targetModulation + '\'' +
+                ", variantAminoacidDescriptions=" + variantAminoacidDescriptions +
+                '}';
     }
 }

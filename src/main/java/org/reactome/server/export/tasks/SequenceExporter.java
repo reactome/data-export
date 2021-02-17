@@ -12,6 +12,7 @@ import java.util.Map;
 /**
  * @author Guilherme S Viteri <gviteri@ebi.ac.uk>
  */
+@SuppressWarnings("unused")
 @DataExport
 public class SequenceExporter extends DataExportAbstract {
 

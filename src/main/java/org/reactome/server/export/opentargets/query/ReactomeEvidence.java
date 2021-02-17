@@ -2,34 +2,27 @@ package org.reactome.server.export.opentargets.query;
 
 import org.reactome.server.export.opentargets.mapper.DiseaseMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
 public class ReactomeEvidence {
 
-    private String releaseDate;
-
-    private String reaction;        //Stable identifier
+    private ReactionBase reaction;
     private String resource;        //Molecule resource: Uniprot | Ensembl | ChEBI
     private String identifier;      //Molecule identifier
     private List<String> mutations;
-
     private String doid;
     private String disease;
     private String diseaseResource;
     private String activity;
-
     private List<PathwayBase> pathways;
-    private List<Integer> pubMedIdentifiers;
+    private List<String> pubMedIdentifiers;
 
     public ReactomeEvidence() { }
 
-    public String getReaction() {
+    public ReactionBase getReaction() {
         return reaction;
-    }
-
-    public String getReleaseDate() {
-        return releaseDate;
     }
 
     public String getResource() {
@@ -41,7 +34,7 @@ public class ReactomeEvidence {
     }
 
     public List<String> getMutations() {
-        return mutations;
+        return (mutations == null) ? new ArrayList<>() : mutations;
     }
 
     public String getDisease() {
@@ -56,11 +49,11 @@ public class ReactomeEvidence {
         return pathways;
     }
 
-    public List<Integer> getPubMedIdentifiers() {
+    public List<String> getPubMedIdentifiers() {
         return pubMedIdentifiers;
     }
 
-    public String getDiseaseIdentifier() {
+    public String getMappedDiseaseIdentifier() {
         String res = DiseaseMapper.doidMapper.get(doid);
         String resource;
         String identifier;
@@ -72,20 +65,10 @@ public class ReactomeEvidence {
             resource = info[0];
             identifier = info[1];
         }
-        switch (resource.toLowerCase()){
-            case "doid":
-                System.err.println("DOID " + identifier + " needs to be mapped");
-                return "http://purl.obolibrary.org/obo/DOID_" + identifier;
-            case "orphanet":
-                return "http://www.orpha.net/ORDO/Orphanet_" + identifier;
-            case "hp":
-                return "http://purl.obolibrary.org/obo/HP_" + identifier;
-            case "omim":
-                return "http://www.omim.org/entry/" + identifier;
-            case "mondo":
-                return "http://purl.obolibrary.org/obo/MONDO_" + identifier;
-            default:
-                return "http://www.ebi.ac.uk/" + resource.toLowerCase() + "/" + resource + "_" + identifier;
-        }
+        return resource + "_" + identifier;
+    }
+
+    public String getSourceDiseaseIdentifier() {
+        return diseaseResource + ":" + doid;
     }
 }

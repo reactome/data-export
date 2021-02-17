@@ -38,8 +38,8 @@ public class GmtExporter {
         MIRBASE("miRBase"),
         IUPHAR("IUPHAR");
 
-        private String name;
-        private String query;
+        private final String name;
+        private final String query;
 
         Resources(String name) {
             this.name = this.query = name;
@@ -82,14 +82,14 @@ public class GmtExporter {
         exportGeneNames(service, path, verbose);
         String time = getTimeFormatted(System.currentTimeMillis() - start);
         logger.info("GMT exporter finished in {}", time);
-        if (verbose) System.out.println(String.format("\rGMT exporter >> Done [%s]", time));
+        if (verbose) System.out.printf("\rGMT exporter >> Done [%s]%n", time);
     }
 
     private static void exportIdentifiers(AdvancedDatabaseObjectService service, String path, boolean verbose) {
         int i = 0, total = Resources.values().length;
         for (Resources resource : Resources.values()) {
             try {
-                if (verbose) System.out.print(String.format("\rRunning GMT file exporter for '%s' [%d/%d]", resource.name, ++i, total));
+                if (verbose) System.out.printf("\rRunning GMT file exporter for '%s' [%d/%d]", resource.name, ++i, total);
 
                 long partial_start = System.currentTimeMillis();
                 Map<String, Object> params = new HashMap<>();

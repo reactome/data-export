@@ -12,8 +12,8 @@ public enum DatabaseNameMapper {
     UNIPROT("UniProt","uniprot"),
     MIRBASE("miRBase","mirbase");
 
-    private String displayName;
-    private String name;
+    private final String displayName;
+    private final String name;
 
     DatabaseNameMapper(String displayName, String name) {
         this.displayName = displayName;
