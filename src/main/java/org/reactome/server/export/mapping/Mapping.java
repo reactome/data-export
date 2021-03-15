@@ -23,7 +23,7 @@ public class Mapping {
         ENSEMBL("Ensembl", "(ENSEMBL|Ensembl)"),
         NCBI("NCBI", "NCBI.*"),
         MIRBASE("miRBase"),
-        IUPHAR("IUPHAR");
+        GtoP("GtoP","(IUPHAR|Guide to Pharmacology|GtoP)");
 
         private final String name;
         private final String query;
