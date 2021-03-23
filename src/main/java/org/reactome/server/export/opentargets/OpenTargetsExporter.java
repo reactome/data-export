@@ -41,7 +41,7 @@ public class OpenTargetsExporter {
             //pe is meant to differentiate the mutations per reference entity -> DO NOT DELETE even though isn't used below
             "WITH DISTINCT rle, c, pe, re, COLLECT(DISTINCT gmr.displayName) AS relMutations, d, fst, pathways, COLLECT(DISTINCT lr.pubMedIdentifier) AS pubMedIdentifiers " +
             "ORDER BY rle.stId " +
-            "UNWIND relMutations AS mutation " +
+            "UNWIND (CASE relMutations WHEN [] then [null] else relMutations end) as mutation " +
             "RETURN DISTINCT {stId: rle.stId, displayName: rle.displayName} AS reaction, " +
             "       re.databaseName AS resource, " +
             "       re.identifier AS identifier, " +
@@ -104,7 +104,7 @@ public class OpenTargetsExporter {
             int extras = 0;
             for (String reactionPlusDiseaseKey : reactionPerDiseases.keySet()) {
                 int sum = reactionPerDiseases.get(reactionPlusDiseaseKey);
-                // If reaction ID has only, it has been counted already. Otherwise sum different DOID.
+                // If reaction ID has only one entry, it has been counted already. Otherwise sum different DOID.
                 extras += (sum <= 1) ? 0 : (sum - 1);
             }
 
