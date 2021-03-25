@@ -34,6 +34,7 @@ public class EvidenceString {
     public String functionalConsequenceId;
 
     @JsonProperty(value = "literature")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public List<String> literature;
 
     @JsonProperty(value = "pathways")
@@ -52,6 +53,7 @@ public class EvidenceString {
     public String targetModulation;
 
     @JsonProperty(value = "variantAminoacidDescriptions")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public List<String> variantAminoacidDescriptions;
 
     public EvidenceString (ReactomeEvidence reactomeEvidence) {

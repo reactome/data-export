@@ -94,7 +94,7 @@ public class OpenTargetsExporter {
             for (ReactomeEvidence reactomeEvidence : reactomeEvidencesQueryResult) {
                 EvidenceString evidenceString = new EvidenceString(reactomeEvidence);
                 ps.println(mapper.writeValueAsString(evidenceString));
-                evidences += reactomeEvidence.getMutations().size();
+                evidences += reactomeEvidence.getMutations() != null ? reactomeEvidence.getMutations().size() : 0;
                 // counting unique reactions
                 uniqueReactions.add(reactomeEvidence.getReaction().getStId());
                 // Same reaction appears more than once if they refer to different disease

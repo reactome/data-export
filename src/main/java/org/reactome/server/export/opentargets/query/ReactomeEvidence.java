@@ -2,7 +2,6 @@ package org.reactome.server.export.opentargets.query;
 
 import org.reactome.server.export.opentargets.mapper.DiseaseMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -34,7 +33,7 @@ public class ReactomeEvidence {
     }
 
     public List<String> getMutations() {
-        return (mutations == null) ? new ArrayList<>() : mutations;
+        return (mutations == null || mutations.isEmpty()) ? null : mutations;
     }
 
     public String getDisease() {
@@ -50,7 +49,7 @@ public class ReactomeEvidence {
     }
 
     public List<String> getPubMedIdentifiers() {
-        return pubMedIdentifiers;
+        return (pubMedIdentifiers == null || pubMedIdentifiers.isEmpty()) ? null : pubMedIdentifiers;
     }
 
     public String getMappedDiseaseIdentifier() {
