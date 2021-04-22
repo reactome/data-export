@@ -64,7 +64,7 @@ pipeline{
 			sh "mkdir -p ${previousReleaseVersion}"
 
 			// Download data-export files archive from previous release from S3. 
-			sh "aws s3 --no-progress cp s3://reactome/private/releases/${previousReleaseVersion}/data_export/${previousExportsArchive} ${previousReleaseVersion}/"
+			sh "aws s3 --no-progress cp s3://reactome/private/releases/${previousReleaseVersion}/data_export/data/${previousExportsArchive} ${previousReleaseVersion}/"
 			dir("${previousReleaseVersion}"){
 				sh "tar -xf ${previousExportsArchive}"
 			}
