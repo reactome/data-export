@@ -1,11 +1,12 @@
 package org.reactome.server.export.tasks;
 
-import org.neo4j.ogm.model.Result;
 import org.reactome.server.export.annotations.DataExport;
 import org.reactome.server.export.tasks.common.DataExportAbstract;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Requested by: DelawareBiotechnologyInstitute
@@ -36,7 +37,7 @@ public class UniProtEntityLiteratureReferences extends DataExportAbstract {
     }
 
     @Override
-    public void printResult(Result result, Path path) throws IOException {
+    public void printResult(Collection<Map<String, Object>> result, Path path) throws IOException {
         print(result, path, "Identifier", "Entity", "Entity_Name", "PMIDs");
     }
 }

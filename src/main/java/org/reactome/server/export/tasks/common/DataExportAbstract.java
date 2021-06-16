@@ -1,7 +1,6 @@
 package org.reactome.server.export.tasks.common;
 
 import org.apache.commons.lang3.StringUtils;
-import org.neo4j.ogm.model.Result;
 import org.reactome.server.graph.service.GeneralService;
 
 import java.io.IOException;
@@ -9,10 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Florian Korninger <florian.korninger@ebi.ac.uk>
@@ -35,7 +31,7 @@ public abstract class DataExportAbstract implements DataExport {
     public boolean run(GeneralService generalService, String path) {
         this.generalService = generalService;
         if (doTest()) {
-            Result result = generalService.query(getQuery(), getMap());
+            Collection<Map<String, Object>> result = generalService.query(getQuery(), getMap());
             if (result == null || !result.iterator().hasNext()) return false;
             try {
                 printResult(result, createFile(path));
@@ -49,13 +45,13 @@ public abstract class DataExportAbstract implements DataExport {
 
     public abstract String getQuery();
 
-    public abstract void printResult(Result result, Path path) throws IOException;
+    public abstract void printResult(Collection<Map<String, Object>> result, Path path) throws IOException;
 
-    protected final void print(Result result, Path path, String... attributes) throws IOException {
+    protected final void print(Collection<Map<String, Object>> result, Path path, String... attributes) throws IOException {
         print(result, path, true, attributes);
     }
 
-    protected final void print(Result result, Path path, boolean header, String... attributes) throws IOException {
+    protected final void print(Collection<Map<String, Object>> result, Path path, boolean header, String... attributes) throws IOException {
         List<String> lines = new ArrayList<>();
         if (header) lines.add(StringUtils.join(attributes, "\t"));
         for (Map<String, Object> map : result) {

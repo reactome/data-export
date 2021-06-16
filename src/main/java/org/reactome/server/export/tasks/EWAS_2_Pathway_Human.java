@@ -1,11 +1,12 @@
 package org.reactome.server.export.tasks;
 
-import org.neo4j.ogm.model.Result;
 import org.reactome.server.export.annotations.DataExport;
 import org.reactome.server.export.tasks.common.DataExportAbstract;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author Antonio Fabregat <fabregat@ebi.ac.uk>
@@ -29,7 +30,7 @@ public class EWAS_2_Pathway_Human extends DataExportAbstract {
     }
 
     @Override
-    public void printResult(Result result, Path path) throws IOException {
+    public void printResult(Collection<Map<String, Object>> result, Path path) throws IOException {
         print(result, path, "ewas", "pathway", "top_level_pathway");
     }
 }
