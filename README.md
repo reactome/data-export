@@ -19,14 +19,13 @@ The data-export can be executed by running the executable jar file. Please ensur
 When executing the jar file the following properties have to be set.
 
 ```console
--h  Reactome Neo4j host. DEFAULT: localhost
--b  Reactome Neo4j port. DEFAULT: 7474
+-h  Reactome Neo4j host. DEFAULT: bolt://localhost:7687
 -u  Reactome Neo4j user. DEFAULT: neo4j
 -p  Reactome Neo4j password. DEFAULT: neo4j
 -o  Output directory. DEFAULT: ./export
 -v  Verbose output
 
-java -Xmx10G -jar target/data-exporter-jar-with-dependencies.jar <arguments> 
+java -Xmx10G -jar target/data-exporter-exec.jar <arguments> 
 ```
 
 **Recommendations**
