@@ -40,7 +40,7 @@
         <jackson-databind.version>2.12.3</jackson-databind.version>
 
         <maven.compiler.version>3.8.1</maven.compiler.version>
-        <spring-boot-maven-plugin.version>2.5.2</spring-boot-maven-plugin.version>
+        <spring.boot.version>2.5.3</spring.boot.version>
     </properties>
 
     <dependencies>
@@ -81,7 +81,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot-maven-plugin.version}</version>
+                <version>${spring.boot.version}</version>
                 <configuration>
                     <mainClass>${main.class}</mainClass>
                     <fork>true</fork>
