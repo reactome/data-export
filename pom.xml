@@ -6,7 +6,7 @@
     <groupId>org.reactome.server.qa</groupId>
     <artifactId>data-export</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <name>Data Export</name>
 
     <description>Exports specific content in several files</description>
@@ -33,7 +33,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <graph.core.version>1.1.22</graph.core.version>
+        <graph.core.version>1.1.27</graph.core.version>
         <jasp.version>2.1</jasp.version>
         <maven.compiler.version>3.5.1</maven.compiler.version>
         <jdk.version>1.8</jdk.version>
