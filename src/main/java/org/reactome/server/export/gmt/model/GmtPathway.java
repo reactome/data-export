@@ -1,8 +1,13 @@
 package org.reactome.server.export.gmt.model;
 
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Value;
+import org.reactome.server.graph.domain.result.CustomQuery;
+
+import java.util.HashSet;
 import java.util.Set;
 
-public class GmtPathway {
+public class GmtPathway implements CustomQuery {
 
     private static final String URI_PREFIX = "https://reactome.org/content/detail/";
 
@@ -42,5 +47,14 @@ public class GmtPathway {
                 ", uri='" + getUri() + '\'' +
                 ", #identifiers=" + (identifiers == null ? 0 : identifiers.size()) +
                 '}';
+    }
+
+    @Override
+    public CustomQuery build(Record r) {
+        GmtPathway gp = new GmtPathway();
+        gp.setName(r.get("name").asString(null));
+        gp.setStId(r.get("stId").asString(null));
+        if (!r.get("identifiers").isNull()) gp.setIdentifiers(new HashSet<>(r.get("identifiers").asList(Value::asString)));
+        return gp;
     }
 }

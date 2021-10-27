@@ -1,11 +1,11 @@
 package org.reactome.server.export.tasks;
 
-import org.neo4j.ogm.model.Result;
 import org.reactome.server.export.annotations.DataExport;
 import org.reactome.server.export.tasks.common.DataExportAbstract;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,21 +18,21 @@ public class SequenceExporter extends DataExportAbstract {
 
     private static final String QUERY_IDS = "MATCH (rle:ReactionLikeEvent) " +
                                             "OPTIONAL MATCH (rle)-[:input|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
-                                            "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:{refDb}}) " +
+                                            "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:$refDb}) " +
                                             "WITH rle, COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'input'} END) AS ps " +
                                             "OPTIONAL MATCH (rle)-[:output|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
-                                            "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:{refDb}}) " +
+                                            "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:$refDb}) " +
                                             "WITH rle, ps + COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'output'} END) AS ps " +
                                             "OPTIONAL MATCH (rle)-[:catalystActivity|physicalEntity|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
-                                            "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:{refDb}}) " +
+                                            "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:$refDb}) " +
                                             "WITH rle, ps + COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'catalyst'} END) AS ps " +
                                             "OPTIONAL MATCH (rle)-[:regulatedBy]->(:NegativeRegulation)-[:regulator|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
-                                            "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:{refDb}}) " +
+                                            "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:$refDb}) " +
                                             "WITH rle, ps + COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'negative'} END) AS ps " +
                                             "OPTIONAL MATCH (rle)-[:regulatedBy]->(:PositiveRegulation)-[:regulator|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
-                                            "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:{refDb}}) " +
+                                            "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:$refDb}) " +
                                             "WITH rle, ps + COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'positive'} END) AS ps " +
-                                            "MATCH path=(p:Pathway{speciesName:{speciesName}})-[:hasEvent]->(rle) " +
+                                            "MATCH path=(p:Pathway{speciesName:$speciesName})-[:hasEvent]->(rle) " +
                                             "UNWIND ps AS part " +
                                             "RETURN p.stId AS pathway_id, rle.stId AS reaction_id, rle.displayName as reaction_name, part.uniprot as uniprot_acc, collect (part.type) as role_in_reaction " +
                                             "ORDER BY pathway_id, reaction_id, uniprot_acc";
@@ -51,7 +51,7 @@ public class SequenceExporter extends DataExportAbstract {
     }
 
     @Override
-    public void printResult(Result result, Path path) throws IOException {
+    public void printResult(Collection<Map<String, Object>> result, Path path) throws IOException {
         print(result, path, "pathway_id", "reaction_id", "reaction_name", "uniprot_acc", "role_in_reaction");
     }
 

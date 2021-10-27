@@ -40,12 +40,12 @@ pipeline{
 						// This is a very memory-intensive step, and as such it is necessary to stop unused services to get it to run to completion.
 						// At time of writing (December 2020), the source of the problem seems to come from the 'Ensembl' mappings.
 						sh "sudo service mysql stop"
-						sh "sudo service tomcat7 stop"
+						sh "sudo service tomcat9 stop"
 
-						sh "java -Xmx${env.JAVA_MEM_MAX}m -jar target/data-export-jar-with-dependencies.jar --user $user --password $pass --output ./${env.OUTPUT_FOLDER} --verbose"
+						sh "java -Xmx${env.JAVA_MEM_MAX}m -jar target/data-export-exec.jar --user $user --password $pass --output ./${env.OUTPUT_FOLDER} --verbose"
 
 						sh "sudo service mysql start"
-						sh "sudo service tomcat7 start"
+						sh "sudo service tomcat9 start"
 						// Archive the files produced by the step for S3.
 						sh "tar -zcvf export-v${releaseVersion}.tgz ${env.OUTPUT_FOLDER}"
 					}

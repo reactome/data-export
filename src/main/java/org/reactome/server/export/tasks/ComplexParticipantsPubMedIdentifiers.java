@@ -1,6 +1,5 @@
 package org.reactome.server.export.tasks;
 
-import org.neo4j.ogm.model.Result;
 import org.reactome.server.export.annotations.DataExport;
 import org.reactome.server.export.tasks.common.DataExportAbstract;
 import org.reactome.server.export.tasks.result.ComplexParticipants;
@@ -17,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -51,7 +51,7 @@ public class ComplexParticipantsPubMedIdentifiers extends DataExportAbstract {
     }
 
     @Override
-    public void printResult(Result result, Path path) { /*Nothing here*/ }
+    public void printResult(Collection<Map<String, Object>> result, Path path) { /*Nothing here*/ }
 
     public boolean run(GeneralService genericService, String path) {
         if (doTest()) {
