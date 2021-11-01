@@ -1,13 +1,16 @@
 package org.reactome.server.export.tasks.result;
 
 import org.apache.commons.lang3.StringUtils;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Value;
+import org.reactome.server.graph.domain.result.CustomQuery;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ComplexParticipants {
+public class ComplexParticipants implements CustomQuery {
 
     private String identifier;
     private String name;
@@ -72,5 +75,16 @@ public class ComplexParticipants {
                 toString(participatingComplexes),
                 toString(pubMedIdentifiers)
         );
+    }
+
+    @Override
+    public CustomQuery build(Record r) {
+        ComplexParticipants cp = new ComplexParticipants();
+        cp.setIdentifier(r.get("identifier").asString(null));
+        cp.setName(r.get("name").asString(null));
+        cp.setParticipatingComplexes(r.get("participatingComplexes").asList(Value::asString));
+        cp.setPubMedIdentifiers(r.get("pubMedIdentifiers").asList(Value::asInt));
+        cp.setParticipants(r.get("participants").asList(Participant::build));
+        return cp;
     }
 }

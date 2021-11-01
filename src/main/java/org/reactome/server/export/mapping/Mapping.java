@@ -1,7 +1,6 @@
 package org.reactome.server.export.mapping;
 
 import org.apache.commons.lang3.StringUtils;
-import org.neo4j.ogm.model.Result;
 import org.reactome.server.graph.service.GeneralService;
 
 import java.io.IOException;
@@ -72,7 +71,7 @@ public class Mapping {
         for (Resources resource : Resources.values()) {
             for (ExportPhysicalEntity exportPhysicalEntity : ExportPhysicalEntity.values()) {
                 for (ExportType type : ExportType.values()) {
-                    Result result = null;
+                    Collection<Map<String,Object>> result = null;
                     List<String> attr = null;
                     String fileName = resource.name + "2Reactome";
                     long start = System.currentTimeMillis();
@@ -127,12 +126,12 @@ public class Mapping {
                 }
             }
             //Only one cleaning after each resource
-            generalService.clearCache();
+            //generalService.clearCache();
         }
         if(verbose) System.out.println("\rMapping finished. " + count + " files has been generated.");
     }
 
-    private static void printMapping(Result result, Path path, List<String> attributes) throws IOException {
+    private static void printMapping(Collection<Map<String, Object>> result, Path path, List<String> attributes) throws IOException {
         List<String> lines = new ArrayList<>();
         attributes = new ArrayList<>(attributes);
         for (Map<String, Object> map : result) {
