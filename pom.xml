@@ -35,12 +35,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.reactome.server.export.Main</main.class>
 
-        <graph.core.version>2.0.3</graph.core.version>
+        <graph.core.version>2.0.4</graph.core.version>
         <jasp.version>2.1</jasp.version>
-        <jackson-databind.version>2.13.1</jackson-databind.version>
+        <jackson-databind.version>2.13.3</jackson-databind.version>
 
         <maven.compiler.version>3.8.1</maven.compiler.version>
-        <spring.boot.version>2.6.6</spring.boot.version>
+        <spring.boot.version>2.7.1</spring.boot.version>
     </properties>
 
     <dependencies>
