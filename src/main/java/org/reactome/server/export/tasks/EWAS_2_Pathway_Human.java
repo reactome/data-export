@@ -22,7 +22,7 @@ public class EWAS_2_Pathway_Human extends DataExportAbstract {
 
     @Override
     public String getQuery() {
-        return " MATCH (ewas:EntityWithAccessionedSequence)<-[:input|output|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]-(rle:ReactionLikeEvent)<-[:hasEvent]-(p:Pathway{speciesName:\"Homo sapiens\"})" +
+        return " MATCH (ewas:EntityWithAccessionedSequence)<-[:input|output|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]-(rle:ReactionLikeEvent)<-[:hasEvent]-(p:Pathway{speciesName:\"Homo sapiens\"})" +
                 "WITH ewas, p " +
                 "MATCH (p)<-[:hasEvent*]-(tlp:TopLevelPathway) " +
                 "RETURN DISTINCT ewas.stId AS ewas, p.stId AS pathway, tlp.stId AS top_level_pathway " +

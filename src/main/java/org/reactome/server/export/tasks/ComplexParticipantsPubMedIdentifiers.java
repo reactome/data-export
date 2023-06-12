@@ -35,7 +35,7 @@ public class ComplexParticipantsPubMedIdentifiers extends DataExportAbstract {
 
     @Override
     public String getQuery() {
-        return " MATCH (c:Complex{speciesName:\"Homo sapiens\"})-[:hasComponent|hasMember|hasCandidate|repeatedUnit*]->()-[:referenceEntity]->(re:ReferenceEntity) " +
+        return " MATCH (c:Complex{speciesName:\"Homo sapiens\"})-[:hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]->()-[:referenceEntity]->(re:ReferenceEntity) " +
                 "OPTIONAL MATCH (c)-[:summation|literatureReference*]->(lr1:LiteratureReference) " +
                 "OPTIONAL MATCH (c)<-[:output]-(:ReactionLikeEvent)-[:summation|literatureReference*]->(lr2:LiteratureReference) " +
                 "OPTIONAL MATCH (c)-[:hasComponent*]->(pc:Complex) " +

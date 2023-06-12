@@ -22,7 +22,7 @@ public class Complex_2_Pathway_Human extends DataExportAbstract {
 
     @Override
     public String getQuery() {
-        return " MATCH (c:Complex)<-[:input|output|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]-(rle:ReactionLikeEvent)<-[:hasEvent]-(p:Pathway{speciesName:\"Homo sapiens\"})" +
+        return " MATCH (c:Complex)<-[:input|output|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]-(rle:ReactionLikeEvent)<-[:hasEvent]-(p:Pathway{speciesName:\"Homo sapiens\"})" +
                 "WITH c, p " +
                 "MATCH (p)<-[:hasEvent*]-(tlp:TopLevelPathway) " +
                 "RETURN DISTINCT c.stId AS complex, p.stId AS pathway, tlp.stId AS top_level_pathway " +

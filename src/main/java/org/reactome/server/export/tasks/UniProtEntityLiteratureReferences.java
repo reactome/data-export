@@ -24,7 +24,7 @@ public class UniProtEntityLiteratureReferences extends DataExportAbstract {
     @Override
     public String getQuery() {
         return "MATCH (rd:ReferenceDatabase)<--(n)<-[:referenceEntity|referenceSequence|crossReference|referenceGene*]-(pe:PhysicalEntity{speciesName:\"Homo sapiens\"}), " +
-                "      (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|repeatedUnit|hasMember|hasCandidate|hasComponent|inferredTo*]-(rle:ReactionLikeEvent) " +
+                "      (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|repeatedUnit|hasMember|hasCandidate|hasComponent|inferredTo|proteinMarker|RNAMarker*]-(rle:ReactionLikeEvent) " +
                 "WHERE rd.displayName =~ \"UniProt\" " +
                 "WITH n, pe, COLLECT(DISTINCT rle) AS rles " +
                 "UNWIND rles AS rle " +
