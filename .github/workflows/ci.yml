@@ -71,7 +71,7 @@ jobs:
                 AWS_REGION: us-east-1
               uses: aws-actions/configure-aws-credentials@v4
               with:
-                role-to-assume: arn:aws:iam::851227637779:role/GithubActionsCIRole
+                role-to-assume: ${{ vars.AWS_ROLE }}
                 aws-region: ${{ env.AWS_REGION }}
 
             - id: login-ecr
