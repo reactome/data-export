@@ -28,15 +28,14 @@ public class PathwaysGoTerms extends DataExportAbstract {
             "WITH n, go_term, COUNT(ancestor) AS ancestor_count, COLLECT(ancestor_go_term.accession) AS ancestor_accessions\n" +
             "WHERE ancestor_count = 0 OR NOT go_term.accession IN ancestor_accessions\n" +
             "RETURN\n" +
-            "n.stId AS Pathway_Id,\n" +
-            "n.displayName AS Pathway_Name,\n" +
-            "go_term.accession AS GO_Term,\n" +
-            "go_term.displayName AS GO_Term_Name\n" +
-            "ORDER BY Pathway_Name\n";
+            "n.stId AS Identifier,\n" +
+            "n.displayName AS Name,\n" +
+            "\"GO:\" + go_term.accession AS GO_Term\n" +
+            "ORDER BY Name\n";
     }
 
     @Override
     public void printResult(Collection<Map<String, Object>> result, Path path) throws IOException {
-        print(result, path, "Pathway_Id", "Pathway_Name", "GO_Term", "GO_Term_Name");
+        print(result, path, "Identifier", "Name", "GO_Term");
     }
 }
