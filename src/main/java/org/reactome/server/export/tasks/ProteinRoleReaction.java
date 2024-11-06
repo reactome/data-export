@@ -27,7 +27,7 @@ public class ProteinRoleReaction extends DataExportAbstract {
                 "WHERE rd.displayName =~ \"UniProt\" "+
                 "WITH n, COLLECT(DISTINCT pe) AS pes "+
                 "UNWIND pes AS pe "+
-                "MATCH (pe)<-[:physicalEntity|regulator|diseaseEntity|hasComponent|hasMember|hasCandidate|repeatedUnit*]-()<-[r:input|output|catalystActivity|regulatedBy|entityFunctionalStatus]-(rle:ReactionLikeEvent) "+
+                "MATCH (pe)<-[:physicalEntity|regulator|diseaseEntity|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]-()<-[r:input|output|catalystActivity|regulatedBy|entityFunctionalStatus]-(rle:ReactionLikeEvent) "+
                 "RETURN DISTINCT n.identifier AS UniProt, TYPE(r) AS Role, rle.stId AS Reaction "+
                 "ORDER BY UniProt, Reaction";
     }

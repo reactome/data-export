@@ -22,11 +22,11 @@ public class OmimCrossReferences extends DataExportAbstract {
 
     @Override
     public String getQuery() {
-        return " MATCH (rs:ReferenceIsoform)<-[:referenceEntity]-(pe:PhysicalEntity)<-[:input|output|repeatedUnit|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate*]-(:ReactionLikeEvent)<-[:hasEvent]-(p:Pathway) " +
+        return " MATCH (rs:ReferenceIsoform)<-[:referenceEntity]-(pe:PhysicalEntity)<-[:input|output|repeatedUnit|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|proteinMarker|RNAMarker*]-(:ReactionLikeEvent)<-[:hasEvent]-(p:Pathway) " +
                 "RETURN DISTINCT rs.variantIdentifier as ACC, p.stId AS PathwayId, p.displayName AS Pathway " +
                 "ORDER BY ACC, PathwayId " +
                 "UNION " +
-                "MATCH (rs:ReferenceGeneProduct)<-[:referenceEntity]-(pe:PhysicalEntity)<-[:input|output|repeatedUnit|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate*]-(:ReactionLikeEvent)<-[:hasEvent]-(p:Pathway) " +
+                "MATCH (rs:ReferenceGeneProduct)<-[:referenceEntity]-(pe:PhysicalEntity)<-[:input|output|repeatedUnit|catalystActivity|physicalEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|proteinMarker|RNAMarker*]-(:ReactionLikeEvent)<-[:hasEvent]-(p:Pathway) " +
                 "WHERE NOT rs:ReferenceIsoform " +
                 "RETURN DISTINCT rs.identifier as ACC, p.stId AS PathwayId, p.displayName AS Pathway " +
                 "ORDER BY ACC, PathwayId";

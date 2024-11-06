@@ -17,19 +17,19 @@ import java.util.Map;
 public class SequenceExporter extends DataExportAbstract {
 
     private static final String QUERY_IDS = "MATCH (rle:ReactionLikeEvent) " +
-                                            "OPTIONAL MATCH (rle)-[:input|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
+                                            "OPTIONAL MATCH (rle)-[:input|hasComponent|hasMember|hasCandidate|proteinMarker|RNAMarker*]->(pe:PhysicalEntity), " +
                                             "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:$refDb}) " +
                                             "WITH rle, COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'input'} END) AS ps " +
-                                            "OPTIONAL MATCH (rle)-[:output|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
+                                            "OPTIONAL MATCH (rle)-[:output|hasComponent|hasMember|hasCandidate|proteinMarker|RNAMarker*]->(pe:PhysicalEntity), " +
                                             "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:$refDb}) " +
                                             "WITH rle, ps + COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'output'} END) AS ps " +
-                                            "OPTIONAL MATCH (rle)-[:catalystActivity|physicalEntity|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
+                                            "OPTIONAL MATCH (rle)-[:catalystActivity|physicalEntity|hasComponent|hasMember|hasCandidate|proteinMarker|RNAMarker*]->(pe:PhysicalEntity), " +
                                             "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:$refDb}) " +
                                             "WITH rle, ps + COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'catalyst'} END) AS ps " +
-                                            "OPTIONAL MATCH (rle)-[:regulatedBy]->(:NegativeRegulation)-[:regulator|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
+                                            "OPTIONAL MATCH (rle)-[:regulatedBy]->(:NegativeRegulation)-[:regulator|hasComponent|hasMember|hasCandidate|proteinMarker|RNAMarker*]->(pe:PhysicalEntity), " +
                                             "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:$refDb}) " +
                                             "WITH rle, ps + COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'negative'} END) AS ps " +
-                                            "OPTIONAL MATCH (rle)-[:regulatedBy]->(:PositiveRegulation)-[:regulator|hasComponent|hasMember|hasCandidate*]->(pe:PhysicalEntity), " +
+                                            "OPTIONAL MATCH (rle)-[:regulatedBy]->(:PositiveRegulation)-[:regulator|hasComponent|hasMember|hasCandidate|proteinMarker|RNAMarker*]->(pe:PhysicalEntity), " +
                                             "               (pe)-[:referenceEntity]->(re:ReferenceEntity)-[:referenceDatabase]->(rd:ReferenceDatabase{displayName:$refDb}) " +
                                             "WITH rle, ps + COLLECT(DISTINCT CASE pe WHEN NULL THEN NULL ELSE {uniprot: re.identifier, type:'positive'} END) AS ps " +
                                             "MATCH path=(p:Pathway{speciesName:$speciesName})-[:hasEvent]->(rle) " +

@@ -11,7 +11,7 @@ abstract class MappingQueries {
                 "WITH DISTINCT n " +
                 "MATCH (n)<-[:referenceEntity|referenceSequence|crossReference|referenceGene*]-(pe:PhysicalEntity) " +
                 "WITH DISTINCT n, pe " +
-                "MATCH (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]-(rle:ReactionLikeEvent) " +
+                "MATCH (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]-(rle:ReactionLikeEvent) " +
                 "WITH n, COLLECT(DISTINCT rle) AS rles " + //At this point we need to narrow down the found RLES by taking each one only once and then
                 "UNWIND rles AS rle " +                    //unwind the list to start the second part with fewer nodes in order to improve performance
                 "MATCH (rle)<-[:hasEvent]-(llp:Pathway) " +
@@ -30,7 +30,7 @@ abstract class MappingQueries {
                 "WITH DISTINCT n " +
                 "MATCH (n)<-[:referenceEntity|referenceSequence|crossReference|referenceGene*]-(pe:PhysicalEntity) " +
                 "WITH DISTINCT n, pe " +
-                "MATCH (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]-(rle:ReactionLikeEvent) " +
+                "MATCH (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]-(rle:ReactionLikeEvent) " +
                 "WITH DISTINCT n, rle " +
                 "MATCH (rle)<-[:hasEvent*]-(p:Pathway) " +
                 "RETURN DISTINCT n.identifier AS Identifier, " +
@@ -48,7 +48,7 @@ abstract class MappingQueries {
                 "WITH DISTINCT n " +
                 "MATCH (n)<-[:referenceEntity|referenceSequence|crossReference|referenceGene*]-(pe:PhysicalEntity) " +
                 "WITH DISTINCT n, pe " +
-                "MATCH (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]-(rle:ReactionLikeEvent) " +
+                "MATCH (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]-(rle:ReactionLikeEvent) " +
                 "RETURN DISTINCT n.identifier AS Identifier," +
                 "                n.variantIdentifier AS variantIdentifier," +
                 "                rle.stId AS Reaction_ID," +
@@ -66,7 +66,7 @@ abstract class MappingQueries {
                 "WITH DISTINCT n " +
                 "MATCH (n)<-[:referenceEntity|referenceSequence|crossReference|referenceGene*]-(pe:PhysicalEntity) " +
                 "WITH DISTINCT n, pe " +
-                "MATCH (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]-(rle:ReactionLikeEvent) " +
+                "MATCH (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]-(rle:ReactionLikeEvent) " +
                 "WITH DISTINCT n, pe, rle " +
                 "MATCH (rle)<-[:hasEvent]-(llp:Pathway) " +
                 "RETURN DISTINCT n.identifier AS Identifier," +
@@ -86,7 +86,7 @@ abstract class MappingQueries {
                 "WITH DISTINCT n " +
                 "MATCH (n)<-[:referenceEntity|referenceSequence|crossReference|referenceGene*]-(pe:PhysicalEntity) " +
                 "WITH DISTINCT n, pe " +
-                "MATCH (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]-(rle:ReactionLikeEvent) " +
+                "MATCH (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]-(rle:ReactionLikeEvent) " +
                 "WITH DISTINCT n, pe, rle " +
                 "MATCH (rle)<-[:hasEvent*]-(p:Pathway) " +
                 "RETURN DISTINCT n.identifier AS Identifier, " +
@@ -106,7 +106,7 @@ abstract class MappingQueries {
                 "WITH DISTINCT n " +
                 "MATCH (n)<-[:referenceEntity|referenceSequence|crossReference|referenceGene*]-(pe:PhysicalEntity) " +
                 "WITH DISTINCT n, pe " +
-                "MATCH (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]-(rle:ReactionLikeEvent) " +
+                "MATCH (pe)<-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]-(rle:ReactionLikeEvent) " +
                 "RETURN DISTINCT n.identifier AS Identifier," +
                 "                n.variantIdentifier AS variantIdentifier," +
                 "                pe.stId AS Entity_ID," +

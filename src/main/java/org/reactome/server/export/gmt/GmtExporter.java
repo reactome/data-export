@@ -53,9 +53,9 @@ public class GmtExporter {
 
     private static final String QUERY_IDS = "" +
             "MATCH (rd:ReferenceDatabase) " +
-            "WHERE rd.displayName =~ {referenceDatabase} " +
+            "WHERE rd.displayName =~ $referenceDatabase " +
             "WITH COLLECT(DISTINCT rd) AS rds " +
-            "MATCH (p:Pathway{speciesName:'Homo sapiens'})-[:hasEvent*]->(:ReactionLikeEvent)-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity) " +
+            "MATCH (p:Pathway{speciesName:'Homo sapiens'})-[:hasEvent*]->(:ReactionLikeEvent)-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]->(pe:PhysicalEntity) " +
             "WITH DISTINCT rds, p, COLLECT(DISTINCT pe) AS pes " +
             "UNWIND pes AS x " +
             "MATCH (x)-[:referenceEntity|referenceSequence|referenceGene|crossReference*]->(n) " +
@@ -67,7 +67,7 @@ public class GmtExporter {
             "ORDER BY stId";
 
     private static final String QUERY_GENE_NAME = "" +
-            "MATCH (p:Pathway{speciesName:'Homo sapiens'})-[:hasEvent*]->(:ReactionLikeEvent)-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit*]->(pe:PhysicalEntity) " +
+            "MATCH (p:Pathway{speciesName:'Homo sapiens'})-[:hasEvent*]->(:ReactionLikeEvent)-[:input|output|catalystActivity|physicalEntity|entityFunctionalStatus|diseaseEntity|regulatedBy|regulator|hasComponent|hasMember|hasCandidate|repeatedUnit|proteinMarker|RNAMarker*]->(pe:PhysicalEntity) " +
             "WITH DISTINCT p, COLLECT(DISTINCT pe) AS pes " +
             "UNWIND pes AS pe " +
             "MATCH (pe)-[:referenceEntity]->(re:ReferenceEntity) " +
