@@ -30,13 +30,12 @@ public class PathwaysGoTerms extends DataExportAbstract {
             "RETURN\n" +
             "n.stId AS Pathway_Id,\n" +
             "n.displayName AS Pathway_Name,\n" +
-            "go_term.accession AS GO_Term,\n" +
-            "go_term.displayName AS GO_Term_Name\n" +
+            "\"GO:\" + go_term.accession AS GO_Term,\n" +
             "ORDER BY Pathway_Name\n";
     }
 
     @Override
     public void printResult(Collection<Map<String, Object>> result, Path path) throws IOException {
-        print(result, path, "Pathway_Id", "Pathway_Name", "GO_Term", "GO_Term_Name");
+        print(result, path, "Identifier", "Name", "GO_Term");
     }
 }
