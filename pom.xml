@@ -58,6 +58,12 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.reactome.release.verifier</groupId>
+			<artifactId>verifier-lib</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -88,7 +94,6 @@
 	</repositories>
 
 	<build>
-		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -113,6 +118,51 @@
 					<execution>
 						<goals>
 							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.6.0</version>
+
+				<executions>
+					<execution>
+						<id>main</id>
+						<configuration>
+							<archive>
+								<manifest>
+									<Main-Class>${main.class}</Main-Class>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<finalName>${project.artifactId}</finalName>
+						</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>verifier</id>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<archive>
+								<manifestEntries>
+									<Main-Class>org.reactome.server.export.verifier.Verifier</Main-Class>
+								</manifestEntries>
+							</archive>
+							<finalName>${project.artifactId}-verifier</finalName>
+						</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
