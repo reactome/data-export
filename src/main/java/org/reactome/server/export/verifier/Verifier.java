@@ -109,27 +109,11 @@ public class Verifier {
     private List<String> getDataExportFileNames() throws IOException {
         return Files.lines(Paths.get(Utils.getDataExportFilesAndSizesListName()))
             .map(this::getFileName)
-            .map(this::removeVersionNumberIfPresent)
             .collect(Collectors.toList());
     }
 
     private String getFileName(String line) {
         return line.split(" ")[1].replace("./", "");
-    }
-
-    private String replaceVersionNumberIfPresent(String fileName) {
-        return fileName.matches(".*_v\\d+\\.txt") ?
-            fileName.replaceFirst("\\d+", String.valueOf(this.releaseNumber)) :
-            fileName;
-    }
-
-    private String removeVersionNumberIfPresent(String fileName) {
-        return (fileName.matches(".*_v\\d+\\.txt")) ?
-            fileName.replaceFirst("_v\\d+", "") : fileName;
-    }
-
-    private String addVersionNumberToFileName(String fileName) {
-        return fileName.replaceFirst(".txt", "_v" + this.releaseNumber + ".txt");
     }
 
     private int getPreviousReleaseNumber() {
