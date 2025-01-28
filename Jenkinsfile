@@ -42,7 +42,7 @@ pipeline{
 						sh "sudo service mysql stop"
 						sh "sudo service tomcat9 stop"
 
-						sh "java -Xmx${env.JAVA_MEM_MAX}m -jar target/data-export-exec.jar --user $user --password $pass --output ./${env.OUTPUT_FOLDER} --verbose"
+						sh "java -Xmx${env.JAVA_MEM_MAX}m -jar target/data-export-jar-with-dependencies.jar --user $user --password $pass --output ./${env.OUTPUT_FOLDER} --verbose"
 
 						sh "sudo service mysql start"
 						sh "sudo service tomcat9 start"
@@ -73,6 +73,15 @@ pipeline{
 			sh "rm -r ${previousReleaseVersion}*"
 		        }
 		    }
+		}
+		// Checks the output folder and files exist and compares their sizes to the previous release
+		stage('Post: Verify Data-Export ran correctly') {
+			steps {
+				def releaseVersion = utils.getReleaseVersion()
+				script {
+					sh "java -jar target/data-export-verifier-jar-with-dependencies.jar -o ${env.OUTPUT_FOLDER} -r ${releaseVersion}"
+				}
+			}
 		}
 		// Move all data-export files to the downloads folder. At time of writing, these files aren't gzipped.
 		stage('Post: Move export files to download folder') {
