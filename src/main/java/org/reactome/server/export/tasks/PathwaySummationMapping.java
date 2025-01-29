@@ -12,7 +12,7 @@ import java.util.Map;
  * Export Pathway Summation Mapping from Neo4j
  */
 @DataExport
-public class PathwaySummationMappingFile extends DataExportAbstract {
+public class PathwaySummationMapping extends DataExportAbstract {
 
     @Override
     public String getName() {
@@ -21,12 +21,11 @@ public class PathwaySummationMappingFile extends DataExportAbstract {
 
     @Override
     public String getQuery() {
-        return "MATCH (p:Pathway {speciesName: 'Homo sapiens'})\n" +
-               "OPTIONAL MATCH (p)-[:summation]->(s:Summation)\n" +
+        return "MATCH (p:Pathway {speciesName: 'Homo sapiens'})-[:summation]->(s:Summation)\n" +
                "RETURN\n" +
                "p.stId AS Identifier,\n" +
                "p.displayName AS Name,\n" +
-               "COALESCE(s.text, '') AS Summation\n" +
+               "replace(replace(s.text, '\n', ' '), '\r', ' ') AS Summation\n" +
                "ORDER BY Name";
     }
 
