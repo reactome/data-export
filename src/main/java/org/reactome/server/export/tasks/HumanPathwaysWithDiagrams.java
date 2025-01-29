@@ -16,7 +16,7 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
 
     @Override
     public String getName() {
-        return "HumanPathwaysWithDiagrams";
+        return "humanPathwaysWithDiagrams";
     }
 
     @Override
