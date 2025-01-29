@@ -34,9 +34,4 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
         "{headers: true}\n) YIELD file\n"+
         "RETURN 'File exported to: ' + file";
     }
-
-    @Override
-    public void printResult(Collection<Map<String, Object>> result, Path path) throws IOException {
-        print(result, path, "Identifier", "Name", "Summation");
-    }
 }
