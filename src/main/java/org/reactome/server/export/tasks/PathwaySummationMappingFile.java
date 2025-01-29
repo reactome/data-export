@@ -16,7 +16,7 @@ public class PathwaySummationMappingFile extends DataExportAbstract {
 
     @Override
     public String getName() {
-        return "pathway2summation.txt";
+        return "pathway2summation";
     }
 
     @Override
