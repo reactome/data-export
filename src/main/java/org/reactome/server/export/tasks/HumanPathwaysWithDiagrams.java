@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @DataExport
 public class HumanPathwaysWithDiagrams extends DataExportAbstract {
 
-    private static final String DIAGRAM_DIRECTORY = "/usr/local/reactomes/Reactome/production/Website/static/download/91/diagram";
+    private static final String DIAGRAM_DIRECTORY = "/data/diagrams";
 
     @Override
     public String getName() {
