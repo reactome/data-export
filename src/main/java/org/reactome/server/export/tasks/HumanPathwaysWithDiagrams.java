@@ -48,13 +48,16 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
      */
     private Set<String> getValidPathwayIds() {
         Set<String> pathwayIds = new HashSet<>();
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(DIAGRAM_DIRECTORY), "*.json")) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(DIAGRAM_DIRECTORY))) {
             for (Path entry : stream) {
-                String filename = entry.getFileName().toString();
-                String pathwayId = filename.replace(".json", ""); // Remove .json extension
-                pathwayIds.add(pathwayId);
+                if (Files.isRegularFile(entry) && entry.toString().endsWith(".json")) {
+                    String filename = entry.getFileName().toString();
+                    String pathwayId = filename.replace(".json", ""); // Remove .json extension
+                    pathwayIds.add(pathwayId);
+                }
             }
-        } catch (IOException e) {
+        }
+         catch (IOException e) {
             System.err.println("Error reading directory: " + e.getMessage());
         }
         return pathwayIds;
