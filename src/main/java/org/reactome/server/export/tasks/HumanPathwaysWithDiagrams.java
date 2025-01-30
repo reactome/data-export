@@ -26,7 +26,7 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
         return "MATCH (p:Pathway)-[:species]->(:Species {dbId: 48887})\n" +
                "OPTIONAL MATCH (p)-[:disease]->(d:Disease)\n" +
                "WITH p, d IS NOT NULL AS isDisease\n" +
-               "RETURN p.stId AS pathwayId, p.displayName AS pathwayName, isDisease\n";
+               "RETURN DISTINCT p.stId AS pathwayId, p.displayName AS pathwayName, isDisease\n";
     }
 
     @Override
