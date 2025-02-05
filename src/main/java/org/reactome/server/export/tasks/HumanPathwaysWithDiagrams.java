@@ -40,21 +40,27 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
 
         // 2) Filter the Neo4j results to include only matching IDs
         List<Map<String, Object>> filteredResults = result.stream()
-                .filter(map -> validPathwayIds.contains(map.get("pathwayId")))
+                .filter(row -> validPathwayIds.contains(row.get("pathwayId")))
                 .collect(Collectors.toList());
 
+        // 3) Transform the filtered results by removing "R-HSA-" prefix in a new mutable map
+        List<Map<String, Object>> transformedResults = filteredResults.stream().map(unmodifiableRow -> {
+            // Create a new HashMap from the unmodifiable row
+            Map<String, Object> modifiableRow = new HashMap<>(unmodifiableRow);
 
-        // Remove the R-HSA- prefix for each pathway ID to compare results (temp)
-        filteredResults.forEach(row -> {
-            String pId = (String) row.get("pathwayId");
+            // Remove prefix if needed
+            String pId = (String) modifiableRow.get("pathwayId");
             if (pId != null && pId.startsWith("R-HSA-")) {
-                row.put("pathwayId", pId.substring("R-HSA-".length()));
+                modifiableRow.put("pathwayId", pId.substring("R-HSA-".length()));
             }
-        });
 
-        // 3) Use the parent's 'print(...)' to output the final filtered list
-        print(filteredResults, path, "pathwayId", "pathwayName", "isDisease");
+            return modifiableRow;
+        }).collect(Collectors.toList());
+
+        // 4) Print (using parent's print method) the final transformed list
+        print(transformedResults, path, "pathwayId", "pathwayName", "isDisease");
     }
+
 
     /**
      * Retrieves a set of valid pathway IDs from the JSON filenames in the target directory,
