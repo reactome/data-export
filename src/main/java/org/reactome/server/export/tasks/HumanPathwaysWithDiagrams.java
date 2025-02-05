@@ -43,6 +43,15 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
                 .filter(map -> validPathwayIds.contains(map.get("pathwayId")))
                 .collect(Collectors.toList());
 
+
+        // Remove the R-HSA- prefix for each pathway ID to compare results (temp)
+        filteredResults.forEach(row -> {
+            String pId = (String) row.get("pathwayId");
+            if (pId != null && pId.startsWith("R-HSA-")) {
+                row.put("pathwayId", pId.substring("R-HSA-".length()));
+            }
+        });
+
         // 3) Use the parent's 'print(...)' to output the final filtered list
         print(filteredResults, path, "pathwayId", "pathwayName", "isDisease");
     }
