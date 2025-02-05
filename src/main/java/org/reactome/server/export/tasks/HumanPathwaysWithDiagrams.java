@@ -8,6 +8,10 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+// JSON parsing imports (Jackson, for example)
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Export Pathway Summation Mapping from Neo4j
  */
@@ -31,35 +35,73 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
 
     @Override
     public void printResult(Collection<Map<String, Object>> result, Path path) throws IOException {
-        // Get valid pathway IDs from JSON files in the directory
+        // 1) Collect valid pathway IDs from the directory
         Set<String> validPathwayIds = getValidPathwayIds();
 
-        // Filter results to include only those with matching pathway IDs
+        // 2) Filter the Neo4j results to include only matching IDs
         List<Map<String, Object>> filteredResults = result.stream()
                 .filter(map -> validPathwayIds.contains(map.get("pathwayId")))
                 .collect(Collectors.toList());
 
-        // Print only the filtered results
+        // 3) Use the parent's 'print(...)' to output the final filtered list
         print(filteredResults, path, "pathwayId", "pathwayName", "isDisease");
     }
 
     /**
-     * Retrieves a set of valid pathway IDs from the JSON filenames in the target directory.
+     * Retrieves a set of valid pathway IDs from the JSON filenames in the target directory,
+     * excluding those where all nodes have renderableClass="ProcessNode".
      */
     private Set<String> getValidPathwayIds() {
         Set<String> pathwayIds = new HashSet<>();
+
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(DIAGRAM_DIRECTORY))) {
             for (Path entry : stream) {
                 if (Files.isRegularFile(entry) && entry.toString().endsWith(".json")) {
                     String filename = entry.getFileName().toString();
-                    String pathwayId = filename.replace(".json", ""); // Remove .json extension
-                    pathwayIds.add(pathwayId);
+                    String pathwayId = filename.replace(".json", "");
+
+                    // Exclude this JSON file if it consists only of "ProcessNode" renderableClasses
+                    if (!isAllProcessNodes(entry)) {
+                        pathwayIds.add(pathwayId);
+                    }
                 }
             }
-        }
-         catch (IOException e) {
+        } catch (IOException e) {
             System.err.println("Error reading directory: " + e.getMessage());
         }
+
         return pathwayIds;
+    }
+
+    /**
+     * Checks if the diagram JSON file has ONLY "ProcessNode" items in its "nodes" array.
+     * If it does, we return true (meaning it should be excluded).
+     */
+    private boolean isAllProcessNodes(Path jsonFilePath) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode root = mapper.readTree(jsonFilePath.toFile());
+            JsonNode nodes = root.get("nodes");
+
+            // If nodes is null, not an array, or empty, it's not "all ProcessNode"
+            if (nodes == null || !nodes.isArray() || nodes.size() == 0) {
+                return false;
+            }
+
+            // If ANY node is not "ProcessNode", return false
+            for (JsonNode node : nodes) {
+                JsonNode renderableClass = node.get("renderableClass");
+                if (renderableClass == null || !"ProcessNode".equals(renderableClass.asText())) {
+                    return false;
+                }
+            }
+            // Every node was "ProcessNode"
+            return true;
+
+        } catch (IOException e) {
+            // If JSON can't be parsed, treat it as not exclusively "ProcessNode"
+            System.err.println("Error parsing JSON file " + jsonFilePath + ": " + e.getMessage());
+            return false;
+        }
     }
 }
