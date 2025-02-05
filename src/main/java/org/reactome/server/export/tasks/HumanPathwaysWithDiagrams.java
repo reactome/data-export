@@ -21,11 +21,11 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
     private static final String DIAGRAM_DIRECTORY = "/data/diagrams";
 
     private static final Set<String> EXCLUDED_RENDERABLE_CLASSES = new HashSet<>(
-    Arrays.asList(
-        "EncapsulatedNode",
-        "ProcessNode"
-    )
-);
+        Arrays.asList(
+            "EncapsulatedNode",
+            "ProcessNode"
+        )
+    );
 
 
     @Override
@@ -51,21 +51,8 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
                 .filter(row -> validPathwayIds.contains(row.get("pathwayId")))
                 .collect(Collectors.toList());
 
-        // // 3) Transform the filtered results by removing "R-HSA-" prefix in a new mutable map
-        // List<Map<String, Object>> transformedResults = filteredResults.stream().map(unmodifiableRow -> {
-        //     // Create a new HashMap from the unmodifiable row
-        //     Map<String, Object> modifiableRow = new HashMap<>(unmodifiableRow);
 
-        //     // Remove prefix if needed
-        //     String pId = (String) modifiableRow.get("pathwayId");
-        //     if (pId != null && pId.startsWith("R-HSA-")) {
-        //         modifiableRow.put("pathwayId", pId.substring("R-HSA-".length()));
-        //     }
-
-        //     return modifiableRow;
-        // }).collect(Collectors.toList());
-
-        // 4) Print (using parent's print method) the final transformed list
+        // 3) Print (using parent's print method) the final transformed list
         print(filteredResults, path, "pathwayId", "pathwayName", "isDisease");
     }
 
