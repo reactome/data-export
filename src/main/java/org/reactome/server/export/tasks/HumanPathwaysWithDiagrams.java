@@ -20,6 +20,14 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
 
     private static final String DIAGRAM_DIRECTORY = "/data/diagrams";
 
+    private static final Set<String> EXCLUDED_RENDERABLE_CLASSES = new HashSet<>(
+    Arrays.asList(
+        "EncapsulatedNode",
+        "ProcessNode"
+    )
+);
+
+
     @Override
     public String getName() {
         return "humanPathwaysWithDiagrams";
@@ -76,7 +84,7 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
                     String pathwayId = filename.replace(".json", "");
 
                     // Exclude this JSON file if it consists only of "ProcessNode" renderableClasses
-                    if (!isAllProcessNodes(entry)) {
+                    if (!isAllExcludedClasses(entry)) {
                         pathwayIds.add(pathwayId);
                     }
                 }
@@ -92,7 +100,7 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
      * Checks if the diagram JSON file has ONLY "ProcessNode" items in its "nodes" array.
      * If it does, we return true (meaning it should be excluded).
      */
-    private boolean isAllProcessNodes(Path jsonFilePath) {
+    private boolean isAllExcludedClasses(Path jsonFilePath) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             JsonNode root = mapper.readTree(jsonFilePath.toFile());
@@ -103,18 +111,18 @@ public class HumanPathwaysWithDiagrams extends DataExportAbstract {
                 return false;
             }
 
-            // If ANY node is not "ProcessNode", return false
+            // If ANY node is not from the excluded list, return false
             for (JsonNode node : nodes) {
                 JsonNode renderableClass = node.get("renderableClass");
-                if (renderableClass == null || !"ProcessNode".equals(renderableClass.asText())) {
+                if (renderableClass == null || !EXCLUDED_RENDERABLE_CLASSES.contains(renderableClass.asText())) {
                     return false;
                 }
             }
-            // Every node was "ProcessNode"
+            // Every node was in the excluded list
             return true;
 
         } catch (IOException e) {
-            // If JSON can't be parsed, treat it as not exclusively "ProcessNode"
+            // If JSON can't be parsed, treat it as not exclusively in the exlcuded list
             System.err.println("Error parsing JSON file " + jsonFilePath + ": " + e.getMessage());
             return false;
         }
