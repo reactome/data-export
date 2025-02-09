@@ -9,8 +9,8 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * @author Joel Weiser <joel.weiser@oicr.on.ca>
- * @author Adam Wright <adam.wright@oicr.on.ca>
+ * @author Joel Weiser (joel.weiser@oicr.on.ca)
+ * @author Adam Wright (adam.wright@oicr.on.ca)
  */
 @SuppressWarnings("unused")
 @DataExport

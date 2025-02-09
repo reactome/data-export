@@ -1,7 +1,7 @@
 package org.reactome.server.export.mapping;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 abstract class MappingQueries {
 

@@ -11,8 +11,8 @@ import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * @author Florian Korninger <florian.korninger@ebi.ac.uk>
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Florian Korninger (florian.korninger@ebi.ac.uk)
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 public abstract class DataExportAbstract implements DataExport {
 

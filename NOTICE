@@ -1,0 +1,16 @@
+NOTICE
+------
+
+This project includes the following software that is licensed under the GNU Lesser General Public License version 3.0 (LGPL-3.0):
+
+* jsap (version 2.1)
+  - Group ID: com.martiansoftware
+  - Artifact ID: jsap
+
+The full text of the LGPL-3.0 license can be found at:
+https://www.gnu.org/licenses/lgpl-3.0.html
+
+You may obtain a copy of the source code for the LGPL-licensed library from the following location:
+https://martiansoftware.com/jsap/
+
+Modifications, if any, to the LGPL-licensed library are subject to the terms of the LGPL-3.0 license.

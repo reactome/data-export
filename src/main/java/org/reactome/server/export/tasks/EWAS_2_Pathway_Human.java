@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 @SuppressWarnings("unused")
 @DataExport

@@ -16,7 +16,7 @@ import java.io.PrintStream;
 import java.util.*;
 
 /**
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 @SuppressWarnings("WeakerAccess")
 public class OpenTargetsExporter {
