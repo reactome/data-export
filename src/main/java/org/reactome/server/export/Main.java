@@ -15,9 +15,9 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Set;
 
 /**
- * @author Florian Korninger <florian.korninger@ebi.ac.uk>
- * @author Guilherme S Viteri <gviteri@ebi.ac.uk>
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Florian Korninger (florian.korninger@ebi.ac.uk)
+ * @author Guilherme S Viteri (gviteri@ebi.ac.uk)
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 @SuppressWarnings("ALL")
 @Configuration

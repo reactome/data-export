@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Requested by: DelawareBiotechnologyInstitute
  *
- * @author Antonio Fabregat <fabregat@ebi.ac.uk>
+ * @author Antonio Fabregat (fabregat@ebi.ac.uk)
  */
 @SuppressWarnings("unused")
 @DataExport
