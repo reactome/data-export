@@ -6,6 +6,7 @@
 
 The Files export module is used to create the exporting files based on queries to the Reactome Graph Database. The module acts as a collection of tasks run against the database using the graph core library. 
 
+
 #### Project components used:
 
 * [Reactome Graph Library](https://github.com/reactome/graph-core)
