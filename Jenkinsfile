@@ -71,6 +71,41 @@ pipeline{
 			}
 		}
 
+		// Execute the verifier jar file checking for the existence and proper file sizes of the data-export output
+		stage('Post: Verify DataExport ran correctly') {
+			steps {
+				script {
+					def releaseVersion = utils.getReleaseVersion()
+
+					sh """
+						docker run \\
+						--rm \\
+						-v ${pwd()}/${env.OUTPUT_FOLDER}:${CONT_ROOT}/${env.OUTPUT_FOLDER}/ \\
+						-v \$HOME/.aws:/root/.aws:ro \\
+						-e AWS_REGION=us-east-1 \\
+						--net=host \\
+						--name ${CONT_NAME}_verifier \\
+						${ECR_URL}:latest \\
+						/bin/bash -c "java -jar target/data-export-verifier.jar --releaseNumber ${releaseVersion} --output ${CONT_ROOT}/${env.OUTPUT_FOLDER}"
+					"""
+				}
+			}
+		}
+
+		// Creates a list of files and their sizes to use for comparison baseline during next release
+		stage('Post: Create files and sizes list to upload for next release\'s verifier') {
+			steps {
+				script {
+					def fileSizeList = "files_and_sizes.txt"
+					def releaseVersion = utils.getReleaseVersion()
+
+					sh "find ${env.OUTPUT_FOLDER} -type f -printf \"%s\t%P\n\" > ${fileSizeList}"
+					sh "aws s3 --no-progress cp ${fileSizeList} s3://reactome/private/releases/${releaseVersion}/data_export/data/"
+					sh "rm ${fileSizeList}"
+				}
+			}
+		}
+
 		// This stage outputs the difference in line counts for data-export files between releases.
 		stage('Post: Compare Data-Export file line counts between releases') {
 			steps{
@@ -90,16 +125,6 @@ pipeline{
 					// Output line counts between files.
 					utils.outputLineCountsOfFilesBetweenFolders("${env.OUTPUT_FOLDER}", "${previousReleaseVersion}/${env.OUTPUT_FOLDER}", "$currentDir")
 					sh "rm -r ${previousReleaseVersion}*"
-				}
-			}
-		}
-
-		// Checks the output folder and files exist and compares their sizes to the previous release
-		stage('Post: Verify Data-Export ran correctly') {
-			steps {
-				def releaseVersion = utils.getReleaseVersion()
-				script {
-					sh "java -jar target/data-export-verifier-jar-with-dependencies.jar -o ${env.OUTPUT_FOLDER} -r ${releaseVersion}"
 				}
 			}
 		}
