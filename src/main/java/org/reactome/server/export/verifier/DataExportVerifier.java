@@ -1,6 +1,5 @@
 package org.reactome.server.export.verifier;
 
-import com.martiansoftware.jsap.*;
 import org.reactome.release.verifier.DefaultVerifier;
 import org.reactome.release.verifier.Verifier;
 
