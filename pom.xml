@@ -8,20 +8,16 @@
 	<packaging>jar</packaging>
 	<version>2.0.7</version>
 	<name>Data Export</name>
-
-    <parent>
-        <groupId>org.reactome.maven</groupId>
-        <artifactId>reactome-parent</artifactId>
-        <version>1.0.5</version>
-    </parent>
-
+	<parent>
+		<groupId>org.reactome.maven</groupId>
+		<artifactId>reactome-parent</artifactId>
+		<version>1.0.5</version>
+	</parent>
 	<description>Exports specific content in several files</description>
-
 	<organization>
 		<name>The European Bioinformatics Institute</name>
 		<url>https://www.ebi.ac.uk/</url>
 	</organization>
-
 	<developers>
 		<developer>
 			<id>gviteri</id>
@@ -35,13 +31,11 @@
 			<id>amundo</id>
 		</developer>
 	</developers>
-
 	<properties>
 		<main.class>org.reactome.server.export.Main</main.class>
 		<verifier.main.class>org.reactome.server.export.verifier.DataExportVerifier</verifier.main.class>
 		<java.version>11</java.version>
 	</properties>
-
 	<dependencies>
 		<!--Graph Core-->
 		<dependency>
@@ -53,20 +47,17 @@
 			<groupId>com.martiansoftware</groupId>
 			<artifactId>jsap</artifactId>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.reactome.release.verifier</groupId>
 			<artifactId>verifier-lib</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-
 	<repositories>
 		<!-- EBI repo -->
 		<repository>
@@ -105,9 +96,8 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
 	<build>
-		<finalName>data-export</finalName>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -118,7 +108,6 @@
 					<target>${java.version}</target>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -152,7 +141,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
