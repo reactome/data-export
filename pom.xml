@@ -38,6 +38,7 @@
 
 	<properties>
 		<main.class>org.reactome.server.export.Main</main.class>
+		<verifier.main.class>org.reactome.server.export.verifier.DataExportVerifier</verifier.main.class>
 		<java.version>11</java.version>
 	</properties>
 
@@ -106,6 +107,7 @@
 	</repositories>
 
 	<build>
+		<finalName>data-export</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -122,60 +124,31 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring-boot.version}</version>
 				<configuration>
-					<mainClass>${main.class}</mainClass>
 					<fork>true</fork>
-					<classifier>exec</classifier>
+					<mainClass>NONE</mainClass>
 				</configuration>
 				<executions>
 					<execution>
+						<id>primary-exec</id>
 						<goals>
 							<goal>repackage</goal>
 						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.6.0</version>
-
-				<executions>
-					<execution>
-						<id>main</id>
 						<configuration>
-							<archive>
-								<manifest>
-									<Main-Class>${main.class}</Main-Class>
-								</manifest>
-							</archive>
-							<descriptorRefs>
-								<descriptorRef>jar-with-dependencies</descriptorRef>
-							</descriptorRefs>
-							<finalName>${project.artifactId}</finalName>
+							<mainClass>${main.class}</mainClass>
+							<classifier>exec</classifier>
+							<skipIfEmpty>true</skipIfEmpty>
 						</configuration>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
 					</execution>
-
 					<execution>
-						<id>verifier</id>
-						<configuration>
-							<descriptorRefs>
-								<descriptorRef>jar-with-dependencies</descriptorRef>
-							</descriptorRefs>
-							<archive>
-								<manifestEntries>
-									<Main-Class>org.reactome.server.export.verifier.Verifier</Main-Class>
-								</manifestEntries>
-							</archive>
-							<finalName>${project.artifactId}-verifier</finalName>
-						</configuration>
-						<phase>package</phase>
+						<id>verifier-exec</id>
 						<goals>
-							<goal>single</goal>
+							<goal>repackage</goal>
 						</goals>
+						<configuration>
+							<mainClass>${verifier.main.class}</mainClass>
+							<classifier>verifier</classifier>
+							<skipIfEmpty>true</skipIfEmpty>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
