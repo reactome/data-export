@@ -43,6 +43,7 @@ pipeline{
 			steps{
 				script{
 					def releaseVersion = utils.getReleaseVersion()
+					def diagramFolderPath = "${env.ABS_DOWNLOAD_PATH}/${releaseVersion}/diagram/"
 
 					sh "mkdir -p ${env.OUTPUT_FOLDER}"
 					sh "rm -rf ${env.OUTPUT_FOLDER}/*"
@@ -54,6 +55,8 @@ pipeline{
 
 						sh """\
 							docker run \\
+							--rm \\
+							-v ${diagramFolderPath}:/data/diagrams:ro \\
 							-v \$(pwd)/${env.OUTPUT_FOLDER}:${CONT_ROOT}/${env.OUTPUT_FOLDER} \\
 							--net=host \\
 							--name ${CONT_NAME} \\
