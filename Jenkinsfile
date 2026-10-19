@@ -51,7 +51,7 @@ pipeline{
 						// This is a very memory-intensive step, and as such it is necessary to stop unused services to get it to run to completion.
 						// At time of writing (December 2020), the source of the problem seems to come from the 'Ensembl' mappings.
 						sh "sudo service mysql stop"
-						sh "sudo service tomcat9 stop"
+						sh "sudo service tomcat stop"
 
 						sh """\
 							docker run \\
@@ -66,7 +66,7 @@ pipeline{
 						sh "sudo chown jenkins:jenkins ${env.OUTPUT_FOLDER}"
 
 						sh "sudo service mysql start"
-						sh "sudo service tomcat9 start"
+						sh "sudo service tomcat start"
 						// Archive the files produced by the step for S3.
 						sh "tar -zcvf export-v${releaseVersion}.tgz ${env.OUTPUT_FOLDER}"
 					}
