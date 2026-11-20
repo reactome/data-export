@@ -55,12 +55,13 @@ class ReactomePathwaysGmtTest {
     }
 
     @Test
-    void trailingSpacesAreTrimmedButNamesStayDistinctBeforeTrimming() {
+    void namesThatDifferOnlyByTrailingSpaceAreMadeUnique() {
+        // compared before trimming, both were written "Signalling": two gene sets of one name
         Collection<Map<String, Object>> rows = Arrays.asList(
                 row(1, "Signalling ", "A"),
                 row(2, "Signalling", "B"));
         List<String> lines = ReactomePathwaysGmt.toLines(rows);
-        assertEquals(Arrays.asList("Signalling\tR-HSA-2\tB", "Signalling\tR-HSA-1\tA"), lines);
+        assertEquals(Arrays.asList("Signalling_1\tR-HSA-1\tA", "Signalling_2\tR-HSA-2\tB"), lines);
     }
 
     @Test
