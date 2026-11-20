@@ -36,8 +36,10 @@ import java.util.zip.ZipOutputStream;
  *       reaction-like event below it; complexes, sets and polymers are followed down to their reference entities;
  *       cell markers are not followed;</li>
  *   <li>a gene is the first gene name of a ReferenceSequence; a pathway with no gene is left out;</li>
- *   <li>names shared by several pathways get "_" and the pathway's dbId appended, so that every name is unique
- *       (GSEA tools need that); the name written is trimmed;</li>
+ *   <li>names are trimmed; names shared by several pathways get "_" and the pathway's dbId appended, so that
+ *       every name is unique (GSEA tools need that). Names are compared trimmed: the relational exporter
+ *       compared them before trimming, so two that differed only by a trailing space came out the same
+ *       (none did in release 98's file);</li>
  *   <li>lines are ordered by name, then dbId, and genes by name (both Java's String order).</li>
  * </ul>
  */
@@ -109,7 +111,7 @@ public class ReactomePathwaysGmt extends DataExportAbstract {
         Set<String> written = new HashSet<>();
         for (GeneSet set : sets) {
             if (set.genes.isEmpty() || !written.add(set.name)) continue;
-            lines.add(set.name.trim() + "\t" + set.stId + "\t" + String.join("\t", set.genes));
+            lines.add(set.name + "\t" + set.stId + "\t" + String.join("\t", set.genes));
         }
         return lines;
     }
@@ -123,7 +125,7 @@ public class ReactomePathwaysGmt extends DataExportAbstract {
         GeneSet(Map<String, Object> row) {
             this.dbId = ((Number) row.get("dbId")).longValue();
             this.stId = (String) row.get("stId");
-            this.name = (String) row.get("name");
+            this.name = ((String) row.get("name")).trim();
             Object genes = row.get("genes");
             if (genes instanceof Collection) {
                 for (Object gene : (Collection<?>) genes) {
